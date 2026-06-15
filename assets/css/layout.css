@@ -1,0 +1,200 @@
+/* ============================================================
+   次元书屋 · 布局骨架 (layout.css)
+   作用：导航栏、页脚、内容区、Sticky布局
+   ============================================================ */
+
+/* ---------- 导航栏 ---------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.6);
+  padding: 0 2rem;
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  height: 64px;
+  gap: 1.5rem;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: rgba(176,124,216,0.12);
+  color: #8b6ab0;
+}
+
+.nav-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-search input {
+  border: 1.5px solid rgba(176,124,216,0.15);
+  border-radius: var(--radius-full);
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: rgba(255,255,255,0.6);
+  outline: none;
+  width: 180px;
+  transition: all var(--transition-fast);
+}
+
+.nav-search input:focus {
+  border-color: var(--color-primary);
+  width: 220px;
+  box-shadow: 0 0 0 3px rgba(176,124,216,0.08);
+}
+
+.nav-search input::placeholder {
+  color: var(--text-ghost);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-ghost);
+  white-space: nowrap;
+}
+
+.nav-user .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ---------- 页脚 ---------- */
+.footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  font-size: 0.8rem;
+  color: var(--text-ghost);
+  border-top: 1px solid rgba(176,124,216,0.08);
+  font-weight: 300;
+}
+
+.footer .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.footer .footer-links a {
+  color: var(--text-ghost);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer .footer-links a:hover {
+  color: #8b6ab0;
+}
+
+/* ---------- 内容区 ---------- */
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-header .more {
+  font-size: 0.8rem;
+  color: var(--text-ghost);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.section-header .more:hover {
+  color: #8b6ab0;
+}
+
+/* ---------- 两栏布局 ---------- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-search input { width: 120px; }
+  .nav-search input:focus { width: 150px; }
+  .two-col { grid-template-columns: 1fr; }
+  .section { padding: 2rem 1rem; }
+}
+
+@media (max-width: 640px) {
+  .section { padding: 2rem 0.75rem; }
+  .footer { padding: 2rem 1rem; }
+}

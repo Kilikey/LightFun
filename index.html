@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 登录 · 次元书屋</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <style>
+    /* ===== 登录页专属样式 ===== */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* 登录卡片 */
+    .login-box {
+      display: flex;
+      max-width: 880px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 36px;
+      box-shadow: var(--shadow-lg), var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .login-box:hover {
+      box-shadow: var(--shadow-hover), var(--shadow-sm);
+    }
+
+    /* 左边图片 */
+    .left-img {
+      flex: 1.1;
+      background: linear-gradient(145deg, #fce4ec, #f3e5f5, #e1f5fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      min-height: 380px;
+    }
+    .left-img img {
+      max-width: 100%;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 12px 32px rgba(150, 100, 180, 0.15);
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s ease;
+    }
+    .left-img img:hover {
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 18px 40px rgba(150, 100, 180, 0.2);
+    }
+
+    /* 右边表单 */
+    .right-form {
+      flex: 1;
+      padding: 2.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .right-form h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      border-left: 6px solid transparent;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .right-form h2::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--color-secondary), var(--color-primary-light));
+      border-radius: 3px;
+    }
+
+    .input-item {
+      margin-bottom: 1.5rem;
+    }
+    .input-item input {
+      width: 100%;
+      padding: 0.9rem 1.4rem;
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      border: 2px solid rgba(176, 124, 216, 0.15);
+      border-radius: 28px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      transition: border 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .input-item input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(176, 124, 216, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .input-item input::placeholder {
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      border-radius: 40px;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      transition: all var(--transition-spring);
+      box-shadow: 0 8px 24px rgba(176, 124, 216, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      letter-spacing: .04em;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(176, 124, 216, 0.3);
+      background: linear-gradient(135deg, #f08ca8, #a86dd0);
+    }
+    .login-btn:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 4px 12px rgba(176, 124, 216, 0.15);
+    }
+
+    /* Toast */
+    #login-toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      min-width: 260px;
+      max-width: 90vw;
+      padding: 14px 26px;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 500;
+      text-align: center;
+      border-radius: 60px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s var(--transition-spring);
+      pointer-events: none;
+      letter-spacing: 0.3px;
+      background: rgba(40, 30, 50, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+    #login-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #login-toast.success {
+      background: rgba(40, 60, 50, 0.9);
+      border-left: 6px solid #6fcf97;
+    }
+    #login-toast.error {
+      background: rgba(70, 40, 45, 0.9);
+      border-left: 6px solid #e07373;
+    }
+
+    /* 移动端 */
+    @media (max-width: 640px) {
+      .login-box {
+        flex-direction: column;
+        border-radius: 28px;
+      }
+      .left-img {
+        padding: 1.8rem;
+        min-height: 200px;
+      }
+      .right-form {
+        padding: 1.8rem 2rem 2.5rem;
+      }
+      .right-form h2 {
+        font-size: 1.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 浮动装饰 -->
+  <div class="deco">🌸</div>
+  <div class="deco">🎀</div>
+  <div class="deco">⭐</div>
+  <div class="deco">🍡</div>
+
+  <!-- 登录卡片 -->
+  <div class="login-box">
+    <div class="left-img">
+      <img src="assets/images/IMG_20260409_223616.jpg" alt="头像">
+    </div>
+
+    <div class="right-form">
+      <h2>✦ 登录</h2>
+      <div class="input-item">
+        <input type="text" placeholder="用户名" id="usernameInput" value="">
+      </div>
+      <div class="input-item">
+        <input type="password" placeholder="密码" id="passwordInput" value="">
+      </div>
+      <button class="login-btn" id="loginButton">✨ 登 录</button>
+    </div>
+  </div>
+
+  <div id="login-toast"></div>
+
+  <script src="assets/js/utils/storage.js"></script>
+  <script src="assets/js/components/toast.js"></script>
+  <script>
+    (function() {
+      "use strict";
+
+      const VALID_USERNAME = '张三';
+      const VALID_PASSWORD = '123456';
+
+      const usernameInput = document.getElementById('usernameInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const loginBtn = document.getElementById('loginButton');
+      const toastEl = document.getElementById('login-toast');
+
+      let toastTimer = null;
+
+      function showLoginToast(message, type = 'info') {
+        if (toastTimer) {
+          clearTimeout(toastTimer);
+          toastTimer = null;
+        }
+        toastEl.textContent = message;
+        toastEl.className = '';
+        if (type === 'success') toastEl.classList.add('success');
+        else if (type === 'error') toastEl.classList.add('error');
+        toastEl.classList.add('show');
+
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove('show');
+          toastTimer = null;
+        }, 2800);
+      }
+
+      function handleLogin() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!username) {
+          showLoginToast('❓ 请输入用户名', 'error');
+          return;
+        }
+        if (!password) {
+          showLoginToast('❓ 请输入密码', 'error');
+          return;
+        }
+
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+          if (toastTimer) clearTimeout(toastTimer);
+          toastEl.textContent = '✅ 登录成功！正在进入次元书屋...';
+          toastEl.className = '';
+          toastEl.classList.add('success', 'show');
+
+          // 保存登录状态
+          Storage.set('user', { name: VALID_USERNAME, avatar: '三' });
+
+          setTimeout(() => {
+            window.location.href = 'pages/library.html';
+          }, 800);
+        } else {
+          let errorMsg = '';
+          if (username !== VALID_USERNAME && password !== VALID_PASSWORD) {
+            errorMsg = '❌ 账号和密码均错误';
+          } else if (username !== VALID_USERNAME) {
+            errorMsg = '❌ 账号不存在';
+          } else if (password !== VALID_PASSWORD) {
+            errorMsg = '❌ 密码错误';
+          }
+          if (!errorMsg) errorMsg = '❌ 登录失败，请检查输入';
+
+          showLoginToast(errorMsg, 'error');
+
+          loginBtn.style.transform = 'translateX(2px)';
+          setTimeout(() => loginBtn.style.transform = '', 80);
+          setTimeout(() => loginBtn.style.transform = 'translateX(-2px)', 120);
+          setTimeout(() => loginBtn.style.transform = '', 200);
+        }
+      }
+
+      if (loginBtn) {
+        loginBtn.removeAttribute('onclick');
+        loginBtn.addEventListener('click', handleLogin);
+      }
+      if (passwordInput) {
+        passwordInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); handleLogin(); }
+        });
+      }
+      if (usernameInput) {
+        usernameInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); handleLogin(); }
+        });
+      }
+
+      console.log('🔐 登录验证已启用 — 正确账号: 张三 / 123456');
+    })();
+  </script>
+</body>
+</html>
