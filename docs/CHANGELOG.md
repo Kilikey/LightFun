@@ -1,129 +1,211 @@
 # 📋 文件修改记录 · 轻小说文库项目
 
-> 项目路径：`D:\PythonFile\HTML\test for first html\`
-> 修改日期：2026-06-15
+> 项目路径：`D:\PythonFile\HTML\test for first html\`  
+> 修改日期：2026-06-15  
+> 最后更新：2026-06-16
 
 ---
 
-## 一、新增文件
+## 更新记录
 
-### 1️⃣ library.html — 轻小说文库主页面
+### 2026-06-16 — 批量功能开发（v1.0.0 → v1.1.0）
 
-**描述：** 仿 wenku8.net 的轻小说在线文库首页，包含完整的浏览、搜索、筛选功能。
+本次对话完成 5 个核心模块，从 v1.0.0 升级至 **v1.1.0**。
 
-**功能模块：**
+| 任务 | 状态 | 文件 |
+|------|------|------|
+| P0 拆分 library.html | ✅ | `library.css` + `library.js` + 重构 `library.html` |
+| P1 阅读器页面 | ✅ | `reader.html` + `reader.css` + `reader.js` |
+| P2 书架功能 | ✅ | `bookshelf.html` + `bookshelf.css` + `bookshelf.js` |
+| P3 注册页 | ✅ | `register.html` |
+| P4 个人中心 + 评分 | ✅ | `user.html` + `user.css` + `user.js` + 评分系统 |
+
+---
+
+### 一、删除文件
+
+**`pages/Home.html` — 三体介绍页**
+- 原因：与轻小说项目定位不符
+- 影响：无，无其他页面引用
+
+---
+
+### 二、P0 — 拆分 library.html 内联代码
+
+| 操作 | 原位置 | 新位置 | 内容 |
+|------|--------|--------|------|
+| 提取 CSS | `library.html` `<style>` 标签（325行） | `assets/css/pages/library.css` | 轮播、网格、排行、更新、标签、模态框、响应式 |
+| 提取 JS | `library.html` `<script>` 标签（283行） | `assets/js/pages/library.js` | 数据、轮播、渲染、搜索、模态框、书架入口 |
+| 重构 HTML | `library.html` 内联混合 | `library.html` 纯结构 | 引用外链 CSS + JS，新增导航链接（书架、我的） |
+| 新增功能 | — | `library.js` | `startReading()` 跳转阅读器、`addToBookshelf()` 加入书架、交互式 5 星评分 |
+
+---
+
+### 三、P1 — 阅读器页面 `pages/reader.html`
+
+**页面**：`reader.html` + `reader.css` + `reader.js`
+
+**功能模块**：
 | 模块 | 说明 |
 |------|------|
-| 🎠 顶部导航栏 | Logo + 导航链接 + 搜索框 + 用户信息 |
-| 🖼️ Hero 轮播 Banner | 5部推荐轻小说自动轮播，支持点击切换 |
-| 📬 今日更新 | 按更新时间排序的最近更新列表 |
-| 🔥 热门排行 | 按评分排序的 Top 6 轻小说排行 |
-| 🆕 新书上架 | 6部精选轻小说网格展示 |
-| 🏷️ Tags 云集 | 20个标签，点击可筛选对应分类作品 |
-| 📚 全部作品 | 20部轻小说完整网格，支持搜索过滤 |
-| 🖼️ 详情模态框 | 点击任一轻小说弹出详情卡片 |
-| 🦶 Footer | 页脚链接 + 退出登录 |
+| 📖 章节内容 | 占位生成中文段落，含分割线 |
+| 📑 章节目录 | 左侧抽屉，高亮当前章节，显示已读标记 |
+| ⚙️ 阅读设置 | 字体大小（14-28px）、行间距（1.2-2.5）、背景主题（浅色/羊皮纸/夜间/护眼）、翻页方式（滚动/分页） |
+| ←→ 翻页导航 | 上一章/下一章按钮、点击左右边缘、键盘方向键、触摸滑动 |
+| 📊 进度条 | 底部滚动进度百分比，实时更新 |
+| 🔖 进度保存 | `readProgress` LocalStorage 记录已读章节 |
+| 📚 阅读历史 | `readHistory` LocalStorage 记录最近阅读 |
+| ⬆️ 返回顶部 | 滚动超400px显示 |
 
-**技术实现：**
-- 单 HTML 文件（CSS + JS 内嵌）
-- 20部轻小说数据内置于 JS 数组，含封面路径、作者、简介、标签、评分等
-- 实时搜索过滤（按标题/作者）
-- 标签云点击筛选
-- 轮播自动切换 + 手动控制
-- 毛玻璃 UI 风格 + 粉紫渐变二次元配色
-- 响应式布局
+**技术实现**：
+- `URLSearchParams` 获取 `?id=1&ch=1`
+- 阅读设置持久化到 `readerSettings` LocalStorage
+- 进度/历史通过 `Storage` 工具封装读写
+- 主题切换通过 `data-theme` attribute 驱动 CSS 变量
 
 ---
 
-### 2️⃣ covers/ — 轻小说封面图片目录
+### 四、P2 — 书架页面 `pages/bookshelf.html`
 
-**描述：** 从 MyAnimeList CDN 下载的 20 张轻小说封面图。
+**页面**：`bookshelf.html` + `bookshelf.css` + `bookshelf.js`
 
-| 文件名 | 轻小说 | 图片URL |
-|--------|--------|---------|
-| 01.jpg | 无职转生 | `https://cdn.myanimelist.net/images/manga/2/181049.jpg` |
-| 02.jpg | 刀剑神域 | `https://cdn.myanimelist.net/images/manga/2/280994.jpg` |
-| 03.jpg | 转生史莱姆 | `https://cdn.myanimelist.net/images/manga/3/167639.jpg` |
-| 04.jpg | 实力至上主义教室 | `https://cdn.myanimelist.net/images/manga/2/177958.jpg` |
-| 05.jpg | 魔法禁书目录 | `https://cdn.myanimelist.net/images/manga/3/176880.jpg` |
-| 06.jpg | 我的青春恋爱物语果然有问题 | `https://cdn.myanimelist.net/images/manga/1/122461.jpg` |
-| 07.jpg | 路人女主的养成方法 | `https://cdn.myanimelist.net/images/manga/3/145019.jpg` |
-| 08.jpg | 命运石之门 | `https://cdn.myanimelist.net/images/manga/1/121341.jpg` |
-| 09.jpg | No Game No Life | `https://cdn.myanimelist.net/images/manga/2/188186.jpg` |
-| 10.jpg | 为美好的世界献上祝福 | `https://cdn.myanimelist.net/images/manga/1/174932.jpg` |
-| 11.jpg | Re:从零开始的异世界生活 | `https://cdn.myanimelist.net/images/manga/1/129447.jpg` |
-| 12.jpg | 葬送的芙莉莲 | `https://cdn.myanimelist.net/images/manga/3/232121.jpg` |
-| 13.jpg | 86-不存在的战区 | `https://cdn.myanimelist.net/images/manga/3/194315.jpg` |
-| 14.jpg | 狼与香辛料 | `https://cdn.myanimelist.net/images/manga/2/153860.jpg` |
-| 15.jpg | 文学少女 | `https://cdn.myanimelist.net/images/manga/3/302207.jpg` |
-| 16.jpg | 奇诺之旅 | `https://cdn.myanimelist.net/images/manga/2/333085.jpg` |
-| 17.jpg | 物语系列 | `https://cdn.myanimelist.net/images/manga/2/279887.jpg` |
-| 18.jpg | 笨蛋测试召唤兽 | `https://cdn.myanimelist.net/images/manga/1/153247.jpg` |
-| 19.jpg | 凉宫春日的忧郁 | `https://cdn.myanimelist.net/images/manga/1/186142.jpg` |
-| 20.jpg | 不正经的魔术讲师与禁忌教典 | `https://cdn.myanimelist.net/images/manga/1/167611.jpg` |
+**功能模块**：
+| 模块 | 说明 |
+|------|------|
+| 📖 继续阅读 | 顶部卡片展示最近阅读的小说，一键跳转上次章节 |
+| 📚 书架网格 | 展示收藏的小说，带阅读进度条（已读章节/总章节） |
+| 🗑️ 移除 | 每本书架卡片可移除 |
+| 🚪 空状态 | 书架为空时引导去文库 |
+
+**数据流**：
+- 书架 ID 列表：`Storage.get('bookshelf')`
+- 阅读进度：`Storage.get('readProgress')`
+- 阅读历史：`Storage.get('readHistory')`
 
 ---
 
-## 二、修改文件
+### 五、P3 — 注册页 `register.html`
 
-### 1️⃣ index.html — 登录页面 (已修改)
+**位置**：根目录 `register.html`（与 `index.html` 同级）
 
-**修改内容：**
-| 项目 | 原版 | 新版 |
-|------|------|------|
-| 🎨 整体风格 | 蓝灰商务风 | 粉紫渐变动漫风 |
-| 🌸 浮动装饰 | 无 | 添加 🌸🎀⭐🍡 漂浮动画 |
-| 🖼️ 登录卡片 | 纯白底色 | 毛玻璃半透明效果 |
-| 🎯 标题 | 深蓝色 `登录` | 粉紫渐变 `✦ 登录` |
-| 🔤 字体 | system-ui | Quicksand + Noto Sans SC |
-| 🎨 按钮 | 深蓝色 | 粉紫渐变 + hover弹起 |
-| 🔲 输入框 | 蓝色边框 | 紫色圆角 + 聚焦光晕 |
-| 🖼️ 头像 | hover 微缩放 | hover 旋转缩放 |
-| 🔗 登录跳转 | 仅演示 Toast | **实际跳转至 library.html** |
-| 🎬 入场动画 | 无 | 滚动触发飞入动画 |
+**功能**：
+| 项目 | 说明 |
+|------|------|
+| 🎨 风格 | 与登录页统一毛玻璃 + 粉紫渐变 |
+| 🔐 表单 | 用户名、密码、确认密码 |
+| ✅ 验证 | 用户名≥2字符、密码≥6位、两次一致 |
+| 💾 存储 | 注册信息写入 `localStorage.db_users` |
+| 🔗 跳转 | 注册成功 → 跳转 `index.html` 登录 |
 
 ---
 
-### 2️⃣ Home.html — 三体介绍页面 (已修改)
+### 六、P4 — 个人中心 + 评分系统
 
-**修改内容：**
-| 项目 | 原版 | 新版 |
-|------|------|------|
-| 🎨 整体风格 | 引用外部 style.css | 内嵌粉紫动漫风 |
-| 🌌 浮动装饰 | 无 | 添加 🌌⭐🪐🌠✨🌙 宇宙风装饰 |
-| 📦 主容器 | 无卡片样式 | 磨砂玻璃圆角卡片 |
-| 🎯 标题 | 纯色标题 | 粉紫蓝渐变大标题 |
-| 🔤 字体 | sans-serif | Quicksand + Noto Sans SC |
-| 🎨 退出按钮 | 无样式原始按钮 | 粉紫渐变圆角按钮 |
-| 🦶 结语 | 无 | 添加 "给岁月以文明" 金句脚注 |
-| 🎬 入场动画 | 无 | 滚动触发飞入动画 |
+**页面**：`user.html` + `user.css` + `user.js`
+
+**功能模块**：
+| 模块 | 说明 |
+|------|------|
+| 👤 用户卡片 | 头像、昵称、签名 |
+| 📊 统计面板 | 已读作品、已读章节、书架收藏、已评分（4项） |
+| 📖 阅读历史 | 最近10条阅读记录，点击跳转阅读器 |
+| ⭐ 我的评分 | 展示已评分的小说列表，显示星级和分数 |
+| ⚙️ 阅读偏好 | 显示当前字体大小、行间距、主题、翻页方式，快捷入口到阅读器 |
+| 🗑️ 清空历史 | 确认对话框后清空 `readHistory` + `readProgress` |
+
+**评分系统**（嵌入 `library.js` 模态框）：
+| 项目 | 说明 |
+|------|------|
+| 位置 | 作品详情模态框中"我的评分"区域 |
+| 交互 | 鼠标悬停预览星级，点击确定评分（1-5星） |
+| 存储 | `Storage.set('ratings', { 1: 5, 2: 4, ... })` |
+| 展示 | `user.html` 评分列表中显示星级和分数 |
 
 ---
 
-## 三、文件结构总览
+## 七、文件结构总览（v1.1.0）
 
 ```
 D:\PythonFile\HTML\test for first html\
-├── index.html          ← 登录入口 (粉紫动漫风格)
-├── library.html        ★ 新增 — 轻小说文库主页面
-├── Home.html           ← 三体介绍页 (粉紫动漫风格)
-├── style.css           ← 旧版样式 (不再被引用)
-├── CHANGELOG.md        ★ 新增 — 本修改记录文档
-├── IMG_20260409_223616.jpg  ← 登录页头像
-└── covers/             ★ 新增 — 20张轻小说封面
-    ├── 01.jpg ~ 20.jpg
+├── index.html              ← 登录入口（张三/123456）
+├── register.html           ← 注册页
+├── Plan.md                 ← 项目总规划
+├── memory.md               ← 工作记忆库
+├── style.css               ← 旧版废弃样式
+│
+├── pages/
+│   ├── library.html        ← 文库首页（外链架构）
+│   ├── reader.html         ← 阅读器
+│   ├── bookshelf.html      ← 我的书架
+│   └── user.html           ← 个人中心
+│
+├── assets/
+│   ├── css/
+│   │   ├── base.css        ← 基础样式系统
+│   │   ├── layout.css      ← 导航栏、页脚、布局骨架
+│   │   └── pages/
+│   │       ├── library.css ← 文库首页样式
+│   │       ├── reader.css  ← 阅读器样式
+│   │       ├── bookshelf.css ← 书架样式
+│   │       └── user.css    ← 个人中心样式
+│   │
+│   ├── js/
+│   │   ├── core/
+│   │   │   ├── state.js    ← 全局状态管理
+│   │   │   └── api.js      ← 数据请求层
+│   │   ├── components/
+│   │   │   └── toast.js    ← Toast 提示组件
+│   │   ├── utils/
+│   │   │   ├── storage.js  ← LocalStorage 封装
+│   │   │   ├── formatter.js ← 格式化工具（星星、日期等）
+│   │   │   └── dom.js      ← DOM 操作工具
+│   │   └── pages/
+│   │       ├── library.js  ← 文库首页逻辑（含评分）
+│   │       ├── reader.js   ← 阅读器逻辑
+│   │       ├── bookshelf.js ← 书架逻辑
+│   │       └── user.js     ← 个人中心逻辑
+│   │
+│   ├── data/
+│   │   └── novels.json     ← 20部轻小说数据
+│   └── images/
+│       ├── covers/
+│       │   └── 01.jpg ~ 20.jpg
+│       └── IMG_20260409_223616.jpg
+│
+├── docs/
+│   └── CHANGELOG.md        ← 本修改记录
+│
+└── .git/                     ← Git 仓库
 ```
 
-## 四、使用流程
+## 八、LocalStorage 数据键说明
+
+| 键 | 说明 | 类型 |
+|----|------|------|
+| `user` | 当前登录用户 | Object `{ name, avatar }` |
+| `db_users` | 注册用户列表 | Array `[{ name, pass, createdAt }]` |
+| `bookshelf` | 书架收藏的小说 ID | Array `[1, 2, 3]` |
+| `readProgress` | 各小说已读章节 | Object `{ "1": [1,2,3], "2": [1] }` |
+| `readHistory` | 阅读历史记录 | Array `[{ id, chapter, title, time }]` |
+| `ratings` | 用户评分 | Object `{ "1": 5, "2": 4 }` |
+| `readerSettings` | 阅读器偏好设置 | Object `{ fontSize, lineHeight, theme, scrollMode }` |
+
+---
+
+## 九、页面导航关系
 
 ```
-┌──────────────┐     登录成功      ┌──────────────────┐
-│  index.html  │ ──────────────→  │  library.html     │
-│  (登录页面)   │                   │  (轻小说文库首页)  │
-│  张三/123456  │                   │                   │
-└──────────────┘                   │  · 浏览全部作品   │
-        ↑                          │  · 搜索/筛选      │
-        │  退出登录                 │  · 查看详情       │
-        └──────────────────────────┘                   │
-                                    └──────────────────┘
+index.html ──登录──→ library.html
+  ↑                      │
+register.html            ├──点击作品→ reader.html?id=X
+  │                      │            │
+  └──注册成功跳转        ├──书架      ├──上一章/下一章
+                         │   ↓        ├──章节目录
+                         ├──bookshelf.html ├──阅读设置
+                         │   │            │
+                         ├──user.html     ├──进度保存
+                             │            └──返回 library
+                             ├──继续阅读
+                             ├──阅读历史
+                             └──我的评分
 ```

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📖 阅读器 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/pages/reader.css">
+</head>
+<body id="readerBody">
+
+<!-- 顶部工具栏 -->
+<div class="reader-toolbar" id="toolbar">
+  <button class="tool-btn" onclick="goBack()">← 返回</button>
+  <span class="tool-title" id="novelTitle">加载中...</span>
+  <button class="tool-btn" onclick="toggleCatalog()">📑 目录</button>
+  <button class="tool-btn" onclick="toggleSettings()">⚙️ 设置</button>
+</div>
+
+<!-- 章节目录抽屉 -->
+<div class="catalog-drawer" id="catalogDrawer">
+  <div class="catalog-header">
+    <h3>📑 章节目录</h3>
+    <button class="close-drawer" onclick="toggleCatalog()">✕</button>
+  </div>
+  <div class="catalog-list" id="catalogList"></div>
+</div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleCatalog()"></div>
+
+<!-- 设置面板 -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-header">
+    <h3>⚙️ 阅读设置</h3>
+    <button class="close-drawer" onclick="toggleSettings()">✕</button>
+  </div>
+  <div class="settings-body">
+    <div class="setting-item">
+      <label>字体大小</label>
+      <div class="setting-control">
+        <button onclick="changeFontSize(-1)">A-</button>
+        <span id="fontSizeVal">18</span>
+        <button onclick="changeFontSize(1)">A+</button>
+      </div>
+    </div>
+    <div class="setting-item">
+      <label>行间距</label>
+      <div class="setting-control">
+        <button onclick="changeLineHeight(-0.2)">-</button>
+        <span id="lineHeightVal">1.8</span>
+        <button onclick="changeLineHeight(0.2)">+</button>
+      </div>
+    </div>
+    <div class="setting-item">
+      <label>背景主题</label>
+      <div class="theme-options">
+        <span class="theme-dot" style="background:#fffbe6" data-theme="light" onclick="setTheme('light')" title="浅色"></span>
+        <span class="theme-dot" style="background:#f5e6c8" data-theme="sepia" onclick="setTheme('sepia')" title="羊皮纸"></span>
+        <span class="theme-dot" style="background:#2d2d3a" data-theme="dark" onclick="setTheme('dark')" title="夜间"></span>
+        <span class="theme-dot" style="background:#e8f5e9" data-theme="green" onclick="setTheme('green')" title="护眼"></span>
+      </div>
+    </div>
+    <div class="setting-item">
+      <label>翻页方式</label>
+      <div class="setting-control">
+        <button class="mode-btn active" onclick="setScrollMode('scroll')" id="btnScroll">滚动</button>
+        <button class="mode-btn" onclick="setScrollMode('page')" id="btnPage">分页</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="drawer-overlay" id="settingsOverlay" onclick="toggleSettings()"></div>
+
+<!-- 阅读内容区 -->
+<div class="reader-content" id="readerContent">
+  <div class="chapter-info" id="chapterInfo"></div>
+  <div class="chapter-text" id="chapterText"></div>
+</div>
+
+<!-- 底部导航 -->
+<div class="reader-footer" id="readerFooter">
+  <button class="nav-btn" onclick="prevChapter()" id="btnPrev">← 上一章</button>
+  <span class="progress-bar"><span id="progressFill"></span></span>
+  <span class="progress-text" id="progressText">0%</span>
+  <button class="nav-btn" onclick="nextChapter()" id="btnNext">下一章 →</button>
+</div>
+
+<!-- 快捷翻页区域（点击左右边缘） -->
+<div class="click-zone click-left" onclick="prevChapter()"></div>
+<div class="click-zone click-right" onclick="nextChapter()"></div>
+
+<!-- 返回顶部 -->
+<button class="back-top" id="backTop" onclick="scrollToTop()">↑</button>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/pages/reader.js"></script>
+</body>
+</html>

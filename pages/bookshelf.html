@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 我的书架 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/pages/bookshelf.css">
+</head>
+<body>
+
+<div class="deco">🌸</div>
+<div class="deco">🎀</div>
+<div class="deco">📚</div>
+<div class="deco">✨</div>
+
+<div class="content">
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="./library.html" class="nav-logo">✦ 次元书屋</a>
+    <div class="nav-links">
+      <a href="./library.html">文库</a>
+      <a href="./bookshelf.html" class="active">书架</a>
+      <a href="./user.html">我的</a>
+    </div>
+    <div class="nav-user">
+      <span class="avatar">三</span>
+      <span>张三</span>
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="section-header">
+    <h2>📚 我的书架</h2>
+    <span style="font-size:.8rem;color:rgba(61,61,74,.3);font-weight:300;" id="shelfCount">共 0 本</span>
+  </div>
+
+  <!-- 继续阅读 -->
+  <div class="continue-reading" id="continueReading"></div>
+
+  <!-- 书架网格 -->
+  <div class="shelf-grid" id="shelfGrid"></div>
+
+  <!-- 空状态 -->
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-icon">📚</div>
+    <p>书架空空如也</p>
+    <p class="empty-sub">去文库逛逛，发现心仪的作品吧</p>
+    <a href="./library.html" class="empty-btn">去文库 →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="./library.html">返回文库</a>
+    <a href="../index.html">退出登录</a>
+  </div>
+  <p>🌸 次元书屋 · 为每一位轻小说爱好者打造</p>
+</footer>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/pages/bookshelf.js"></script>
+</body>
+</html>

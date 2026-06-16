@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👤 个人中心 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/pages/user.css">
+</head>
+<body>
+
+<div class="deco">🌸</div>
+<div class="deco">🎀</div>
+<div class="deco">✨</div>
+<div class="deco">🌙</div>
+
+<div class="content">
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="./library.html" class="nav-logo">✦ 次元书屋</a>
+    <div class="nav-links">
+      <a href="./library.html">文库</a>
+      <a href="./bookshelf.html">书架</a>
+      <a href="./user.html" class="active">我的</a>
+    </div>
+    <div class="nav-user">
+      <span class="avatar">三</span>
+      <span>张三</span>
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <!-- 用户信息卡片 -->
+  <div class="user-card">
+    <div class="user-avatar">三</div>
+    <div class="user-info">
+      <h2>张三</h2>
+      <p class="user-bio">📖 轻小说爱好者 · 在次元中探索无限可能</p>
+    </div>
+  </div>
+
+  <!-- 统计面板 -->
+  <div class="stats-panel">
+    <div class="stat-item">
+      <div class="stat-num" id="statBooks">0</div>
+      <div class="stat-label">已读作品</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statChapters">0</div>
+      <div class="stat-label">已读章节</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statShelf">0</div>
+      <div class="stat-label">书架收藏</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="statRatings">0</div>
+      <div class="stat-label">已评分</div>
+    </div>
+  </div>
+
+  <!-- 阅读历史 -->
+  <div class="panel">
+    <div class="panel-header">
+      <h3>📖 阅读历史</h3>
+      <a href="javascript:clearHistory()" class="panel-action" id="clearHistoryBtn">清空</a>
+    </div>
+    <div class="history-list" id="historyList"></div>
+    <div class="empty-mini" id="emptyHistory" style="display:none;">
+      <p>还没有阅读记录</p>
+    </div>
+  </div>
+
+  <!-- 我的评分 -->
+  <div class="panel">
+    <div class="panel-header">
+      <h3>⭐ 我的评分</h3>
+    </div>
+    <div class="rating-list" id="ratingList"></div>
+    <div class="empty-mini" id="emptyRating" style="display:none;">
+      <p>还没有评分记录</p>
+    </div>
+  </div>
+
+  <!-- 阅读设置快捷入口 -->
+  <div class="panel">
+    <div class="panel-header">
+      <h3>⚙️ 阅读偏好</h3>
+    </div>
+    <div class="pref-list">
+      <div class="pref-item">
+        <span>字体大小</span>
+        <span class="pref-val" id="prefFontSize">18px</span>
+      </div>
+      <div class="pref-item">
+        <span>行间距</span>
+        <span class="pref-val" id="prefLineHeight">1.8</span>
+      </div>
+      <div class="pref-item">
+        <span>背景主题</span>
+        <span class="pref-val" id="prefTheme">浅色</span>
+      </div>
+      <div class="pref-item">
+        <span>翻页方式</span>
+        <span class="pref-val" id="prefScrollMode">滚动</span>
+      </div>
+      <a href="reader.html?id=1" class="pref-btn">去阅读器调整设置 →</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="./library.html">返回文库</a>
+    <a href="../index.html">退出登录</a>
+  </div>
+  <p>🌸 次元书屋 · 为每一位轻小说爱好者打造</p>
+</footer>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/pages/user.js"></script>
+</body>
+</html>

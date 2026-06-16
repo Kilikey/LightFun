@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ 注册 · 次元书屋</title>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .register-box {
+      display: flex;
+      max-width: 880px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 36px;
+      box-shadow: var(--shadow-lg), var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .register-box:hover {
+      box-shadow: var(--shadow-hover), var(--shadow-sm);
+    }
+
+    .left-img {
+      flex: 1.1;
+      background: linear-gradient(145deg, #fce4ec, #f3e5f5, #e1f5fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      min-height: 380px;
+    }
+    .left-img img {
+      max-width: 100%;
+      max-height: 300px;
+      width: auto;
+      height: auto;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 12px 32px rgba(150, 100, 180, 0.15);
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s ease;
+    }
+    .left-img img:hover {
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 18px 40px rgba(150, 100, 180, 0.2);
+    }
+
+    .right-form {
+      flex: 1;
+      padding: 2.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .right-form h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      border-left: 6px solid transparent;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .right-form h2::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--color-secondary), var(--color-primary-light));
+      border-radius: 3px;
+    }
+
+    .input-item {
+      margin-bottom: 1.2rem;
+    }
+    .input-item input {
+      width: 100%;
+      padding: 0.9rem 1.4rem;
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      border: 2px solid rgba(176, 124, 216, 0.15);
+      border-radius: 28px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      transition: border 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .input-item input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(176, 124, 216, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .input-item input::placeholder {
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+    .input-item label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      padding-left: 1.2rem;
+    }
+
+    .register-btn {
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      border-radius: 40px;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      transition: all var(--transition-spring);
+      box-shadow: 0 8px 24px rgba(176, 124, 216, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      letter-spacing: .04em;
+    }
+    .register-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(176, 124, 216, 0.3);
+      background: linear-gradient(135deg, #f08ca8, #a86dd0);
+    }
+
+    .form-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .form-footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .form-footer a:hover { text-decoration: underline; }
+
+    #register-toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      min-width: 260px;
+      max-width: 90vw;
+      padding: 14px 26px;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 500;
+      text-align: center;
+      border-radius: 60px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s var(--transition-spring);
+      pointer-events: none;
+      letter-spacing: 0.3px;
+      background: rgba(40, 30, 50, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+    #register-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #register-toast.success { background: rgba(40, 60, 50, 0.9); border-left: 6px solid #6fcf97; }
+    #register-toast.error { background: rgba(70, 40, 45, 0.9); border-left: 6px solid #e07373; }
+
+    @media (max-width: 640px) {
+      .register-box { flex-direction: column; border-radius: 28px; }
+      .left-img { padding: 1.8rem; min-height: 200px; }
+      .right-form { padding: 1.8rem 2rem 2.5rem; }
+      .right-form h2 { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deco">🌸</div>
+  <div class="deco">🎀</div>
+  <div class="deco">⭐</div>
+  <div class="deco">🍡</div>
+
+  <div class="register-box">
+    <div class="left-img">
+      <img src="assets/images/IMG_20260409_223616.jpg" alt="头像">
+    </div>
+
+    <div class="right-form">
+      <h2>✨ 注册</h2>
+      <div class="input-item">
+        <label>用户名</label>
+        <input type="text" placeholder="起一个响亮的名字" id="regUsername" value="">
+      </div>
+      <div class="input-item">
+        <label>密码</label>
+        <input type="password" placeholder="设置密码（至少6位）" id="regPassword" value="">
+      </div>
+      <div class="input-item">
+        <label>确认密码</label>
+        <input type="password" placeholder="再次输入密码" id="regConfirm" value="">
+      </div>
+      <button class="register-btn" id="registerBtn">✨ 注册账号</button>
+      <div class="form-footer">
+        已有账号？<a href="index.html">去登录 →</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="register-toast"></div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      const regBtn = document.getElementById('registerBtn');
+      const toastEl = document.getElementById('register-toast');
+      let toastTimer = null;
+
+      function showToast(message, type) {
+        if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+        toastEl.textContent = message;
+        toastEl.className = '';
+        if (type === 'success') toastEl.classList.add('success');
+        else if (type === 'error') toastEl.classList.add('error');
+        toastEl.classList.add('show');
+        toastTimer = setTimeout(() => { toastEl.classList.remove('show'); toastTimer = null; }, 2800);
+      }
+
+      function validate() {
+        const user = document.getElementById('regUsername').value.trim();
+        const pass = document.getElementById('regPassword').value;
+        const confirm = document.getElementById('regConfirm').value;
+
+        if (!user) return '❓ 请输入用户名';
+        if (user.length < 2) return '❌ 用户名至少2个字符';
+        if (!pass) return '❓ 请输入密码';
+        if (pass.length < 6) return '❌ 密码至少6位';
+        if (pass !== confirm) return '❌ 两次密码不一致';
+        return null;
+      }
+
+      regBtn.addEventListener('click', function() {
+        const err = validate();
+        if (err) { showToast(err, 'error'); return; }
+
+        const user = document.getElementById('regUsername').value.trim();
+        const pass = document.getElementById('regPassword').value;
+
+        // 模拟注册（存储到 localStorage）
+        const users = JSON.parse(localStorage.getItem('db_users') || '[]');
+        if (users.find(u => u.name === user)) {
+          showToast('❌ 用户名已被注册', 'error');
+          return;
+        }
+        users.push({ name: user, pass: pass, createdAt: Date.now() });
+        localStorage.setItem('db_users', JSON.stringify(users));
+
+        showToast('✅ 注册成功！即将跳转登录...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+      });
+    })();
+  </script>
+</body>
+</html>
