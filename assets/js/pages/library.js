@@ -332,24 +332,262 @@ function renderNewBooks() {
 /* ---------- 全部作品 / 搜索 ---------- */
 function filterNovels() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const filtered = q ? NOVELS.filter(n => n.title.includes(q) || n.author.includes(q)) : NOVELS;
-  renderNovelGrid(filtered);
+  if (!q) {
+    renderNovelGrid(NOVELS);
+    document.getElementById('searchClear').style.display = 'none';
+    return;
+  }
+  document.getElementById('searchClear').style.display = 'flex';
+  const results = searchNovels(q);
+  renderNovelGrid(results, q);
+  saveSearchHistory(q);
 }
-function renderNovelGrid(list) {
+
+function searchNovels(q) {
+  const scored = NOVELS.map(n => {
+    let score = 0;
+    const qt = q.toLowerCase();
+    const title = n.title.toLowerCase();
+    const author = n.author.toLowerCase();
+    const desc = n.desc.toLowerCase();
+    const tags = n.tags.map(t => t.toLowerCase());
+
+    // 标题匹配（权重最高）
+    if (title === qt) score += 100;
+    else if (title.startsWith(qt)) score += 80;
+    else if (title.includes(qt)) score += 60;
+
+    // 作者匹配
+    if (author === qt) score += 70;
+    else if (author.startsWith(qt)) score += 50;
+    else if (author.includes(qt)) score += 40;
+
+    // 标签匹配
+    tags.forEach(t => {
+      if (t === qt) score += 45;
+      else if (t.includes(qt)) score += 30;
+    });
+
+    // 简介匹配
+    if (desc.includes(qt)) score += 15;
+
+    return { novel: n, score: score, novelScore: n.score };
+  }).filter(item => item.score > 0);
+
+  // 按搜索相关性排序，相同则按作品评分排序
+  scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return b.novelScore - a.novelScore;
+  });
+
+  return scored.map(item => item.novel);
+}
+
+function renderNovelGrid(list, highlightQuery) {
   const el = document.getElementById('novelGrid');
   document.getElementById('novelCount').textContent = '共 ' + list.length + ' 部';
-  el.innerHTML = list.map(n => `
-    <div class="novel-card" onclick="openModal(${n.id})">
-      <div class="cover-wrap">
-        <img src="${n.cover}" alt="${n.title}" loading="lazy" onerror="this.style.display='none'">
-      </div>
-      <div class="novel-info">
-        <h4>${n.title}</h4>
-        <div class="author">${n.author}</div>
-        <span class="status ${n.status==='completed'?'completed':''}">${n.status==='completed'?'✅ 完结':'📖 连载中'}</span>
-      </div>
-    </div>`).join('');
+
+  let sortBar = '';
+  if (highlightQuery && list.length > 0) {
+    sortBar = `
+      <div class="search-sort-bar" id="searchSortBar">
+        <label>排序:</label>
+        <button class="search-sort-btn active" onclick="sortSearchResults('relevance')" id="sort-relevance">相关度</button>
+        <button class="search-sort-btn" onclick="sortSearchResults('score')" id="sort-score">评分</button>
+        <button class="search-sort-btn" onclick="sortSearchResults('chapters')" id="sort-chapters">章节数</button>
+      </div>`;
+  }
+
+  el.innerHTML = sortBar + list.map(n => {
+    let title = n.title;
+    let author = n.author;
+    if (highlightQuery) {
+      const q = highlightQuery.toLowerCase();
+      const re = new RegExp(`(${escapeRegExp(q)})`, 'gi');
+      title = title.replace(re, '<span class="highlight">$1</span>');
+      author = author.replace(re, '<span class="highlight">$1</span>');
+    }
+    return `
+      <div class="novel-card" onclick="openModal(${n.id})">
+        <div class="cover-wrap">
+          <img src="${n.cover}" alt="${n.title}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="novel-info">
+          <h4>${title}</h4>
+          <div class="author">${author}</div>
+          <span class="status ${n.status==='completed'?'completed':''}">${n.status==='completed'?'✅ 完结':'📖 连载中'}</span>
+        </div>
+      </div>`;
+  }).join('');
 }
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+let currentSearchResults = [];
+let currentSearchQuery = '';
+
+function sortSearchResults(by) {
+  document.querySelectorAll('.search-sort-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sort-' + by).classList.add('active');
+
+  let sorted = [...currentSearchResults];
+  if (by === 'score') {
+    sorted.sort((a, b) => b.score - a.score);
+  } else if (by === 'chapters') {
+    sorted.sort((a, b) => b.chapters - a.chapters);
+  } else {
+    // 相关度 - 重新计算
+    sorted = searchNovels(currentSearchQuery);
+  }
+  renderNovelGrid(sorted, currentSearchQuery);
+}
+
+/* ---------- 搜索面板交互 ---------- */
+function handleSearchInput() {
+  const q = document.getElementById('searchInput').value.trim();
+  currentSearchQuery = q;
+  currentSearchResults = q ? searchNovels(q) : [];
+
+  if (q) {
+    document.getElementById('searchClear').style.display = 'flex';
+    renderSearchSuggestions(q);
+    document.getElementById('searchSuggestions').style.display = 'block';
+    document.getElementById('searchHistory').style.display = 'none';
+    document.getElementById('searchHot').style.display = 'none';
+  } else {
+    document.getElementById('searchClear').style.display = 'none';
+    document.getElementById('searchSuggestions').style.display = 'none';
+    renderSearchHistory();
+    renderHotSearch();
+    document.getElementById('searchHistory').style.display = 'block';
+    document.getElementById('searchHot').style.display = 'block';
+  }
+  showSearchPanel();
+}
+
+function handleSearchKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    filterNovels();
+    hideSearchPanel();
+    // 滚动到全部作品区域
+    document.getElementById('allNovels').scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'Escape') {
+    hideSearchPanel();
+  }
+}
+
+function showSearchPanel() {
+  document.getElementById('searchPanel').classList.add('show');
+  if (!document.getElementById('searchInput').value.trim()) {
+    renderSearchHistory();
+    renderHotSearch();
+    document.getElementById('searchHistory').style.display = 'block';
+    document.getElementById('searchHot').style.display = 'block';
+  }
+}
+
+function hideSearchPanel() {
+  document.getElementById('searchPanel').classList.remove('show');
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').style.display = 'none';
+  renderNovelGrid(NOVELS);
+  document.getElementById('novelCount').textContent = '共 ' + NOVELS.length + ' 部';
+  hideSearchPanel();
+  handleSearchInput();
+}
+
+/* ---------- 搜索历史 ---------- */
+function saveSearchHistory(q) {
+  if (!q) return;
+  const history = Storage.get('searchHistory') || [];
+  const idx = history.indexOf(q);
+  if (idx >= 0) history.splice(idx, 1);
+  history.unshift(q);
+  if (history.length > 20) history.length = 20;
+  Storage.set('searchHistory', history);
+}
+
+function renderSearchHistory() {
+  const history = Storage.get('searchHistory') || [];
+  const el = document.getElementById('historyList');
+  if (history.length === 0) {
+    document.getElementById('searchHistory').style.display = 'none';
+    return;
+  }
+  document.getElementById('searchHistory').style.display = 'block';
+  el.innerHTML = `<div class="search-tag-list">${history.map(h =>
+    `<span class="search-tag history" onclick="applySearch('${h.replace(/'/g, "\\'")}')">${h}</span>`
+  ).join('')}</div>`;
+}
+
+function clearSearchHistory() {
+  Storage.remove('searchHistory');
+  renderSearchHistory();
+  event.stopPropagation();
+}
+
+function applySearch(q) {
+  document.getElementById('searchInput').value = q;
+  filterNovels();
+  hideSearchPanel();
+  document.getElementById('allNovels').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ---------- 热门搜索 ---------- */
+const HOT_SEARCHES = [
+  '异世界', '校园', '恋爱', '奇幻', '战斗',
+  '败犬女主', '邻家天使', '毛妹', '影之实力者', '地错',
+  '转生', '治愈', '日常', '悬疑', '科幻'
+];
+
+function renderHotSearch() {
+  const el = document.getElementById('hotSearchList');
+  el.innerHTML = `<div class="search-tag-list">${HOT_SEARCHES.map(h =>
+    `<span class="search-tag hot" onclick="applySearch('${h.replace(/'/g, "\\'")}')">${h}</span>`
+  ).join('')}</div>`;
+}
+
+/* ---------- 搜索建议 ---------- */
+function renderSearchSuggestions(q) {
+  const results = searchNovels(q).slice(0, 8);
+  const el = document.getElementById('suggestionList');
+  const qt = q.toLowerCase();
+  const re = new RegExp(`(${escapeRegExp(qt)})`, 'gi');
+
+  el.innerHTML = results.map(n => {
+    let title = n.title.replace(re, '<span class="highlight">$1</span>');
+    let author = n.author.replace(re, '<span class="highlight">$1</span>');
+    let matchType = '';
+    if (n.title.toLowerCase().includes(qt)) matchType = '标题';
+    else if (n.author.toLowerCase().includes(qt)) matchType = '作者';
+    else if (n.tags.some(t => t.toLowerCase().includes(qt))) matchType = '标签';
+    else matchType = '简介';
+
+    return `
+      <div class="search-suggestion-item" onclick="applySearch('${n.title.replace(/'/g, "\\'")}')">
+        <img src="${n.cover}" alt="${n.title}" onerror="this.style.display='none'">
+        <div class="sg-info">
+          <div class="sg-title">${title}</div>
+          <div class="sg-author">${author}</div>
+        </div>
+        <span class="sg-match">${matchType}</span>
+      </div>`;
+  }).join('');
+}
+
+// 点击外部关闭搜索面板
+document.addEventListener('click', function(e) {
+  const wrap = document.querySelector('.search-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    hideSearchPanel();
+  }
+});
 
 /* ---------- Tags ---------- */
 function renderTags() {

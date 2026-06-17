@@ -32,7 +32,24 @@
       <a href="./user.html">我的</a>
     </div>
     <div class="nav-search">
-      <input type="text" id="searchInput" placeholder="🔍 搜索轻小说..." oninput="filterNovels()">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 搜索轻小说..." oninput="handleSearchInput()" onkeydown="handleSearchKey(event)" onfocus="showSearchPanel()" autocomplete="off">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display:none;">✕</button>
+        <div class="search-panel" id="searchPanel">
+          <div class="search-section" id="searchSuggestions" style="display:none;">
+            <div class="search-section-title">💡 搜索建议</div>
+            <div class="search-suggestions" id="suggestionList"></div>
+          </div>
+          <div class="search-section" id="searchHistory" style="display:none;">
+            <div class="search-section-title">🕐 搜索历史 <span class="clear-history" onclick="clearSearchHistory()">清空</span></div>
+            <div class="search-history" id="historyList"></div>
+          </div>
+          <div class="search-section" id="searchHot">
+            <div class="search-section-title">🔥 热门搜索</div>
+            <div class="search-hot" id="hotSearchList"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="nav-user">
       <span class="avatar">三</span>
