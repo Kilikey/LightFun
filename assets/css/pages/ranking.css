@@ -1,0 +1,198 @@
+/* ========== 排行榜页专属样式 ========== */
+
+/* --- 标签切换 --- */
+.rank-tabs {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.tab-btn {
+  padding: 0.6rem 1.4rem;
+  border-radius: 100px;
+  border: 1.5px solid rgba(176,124,216,0.15);
+  background: rgba(255,255,255,0.35);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+.tab-btn:hover {
+  background: rgba(176,124,216,0.1);
+  border-color: rgba(176,124,216,0.3);
+  color: #8b6ab0;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(176,124,216,0.25);
+}
+
+/* --- 排行面板 --- */
+.rank-panel { min-height: 300px; }
+.rank-panel.hidden { display: none; }
+
+.rank-intro {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* --- 排行列表 --- */
+.rank-list-full { display: flex; flex-direction: column; gap: 0.6rem; }
+.rank-item-full {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 16px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.rank-item-full:hover {
+  background: rgba(255,255,255,0.6);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(150,100,180,0.08);
+}
+
+.rank-num-full {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 0.95rem;
+  background: rgba(61,61,74,0.06);
+  color: rgba(61,61,74,0.3);
+  flex-shrink: 0;
+}
+.rank-num-full.top1 { background: linear-gradient(135deg, #f5b342, #f5a0b8); color: #fff; box-shadow: 0 4px 12px rgba(245,160,184,0.3); }
+.rank-num-full.top2 { background: linear-gradient(135deg, #c0c0c0, #e0e0e0); color: #fff; }
+.rank-num-full.top3 { background: linear-gradient(135deg, #cd7f32, #daa520); color: #fff; }
+
+.rank-item-full img {
+  width: 48px; height: 68px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.rank-item-full .rf-info { flex: 1; min-width: 0; }
+.rank-item-full .rf-title {
+  font-size: 0.9rem; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 0.15rem;
+}
+.rank-item-full .rf-author {
+  font-size: 0.75rem; color: var(--text-muted); font-weight: 300;
+}
+.rank-item-full .rf-meta {
+  display: flex; align-items: center; gap: 0.8rem;
+  font-size: 0.75rem; color: var(--text-muted);
+}
+.rank-item-full .rf-meta .stars { color: var(--color-gold); }
+.rank-item-full .rf-tag {
+  font-size: 0.65rem; padding: 0.1rem 0.5rem;
+  border-radius: 100px; background: rgba(176,124,216,0.08); color: #8b6ab0;
+}
+
+/* --- 年份选择器 --- */
+.year-selector {
+  display: flex; gap: 0.5rem;
+  overflow-x: auto; padding: 0.5rem 0 1rem;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.year-selector::-webkit-scrollbar { display: none; }
+.year-btn {
+  padding: 0.4rem 1rem; border-radius: 100px;
+  border: 1.5px solid rgba(176,124,216,0.15);
+  background: rgba(255,255,255,0.35);
+  color: var(--text-muted); font-size: 0.8rem;
+  cursor: pointer; transition: all 0.3s ease;
+  font-family: inherit; white-space: nowrap;
+}
+.year-btn:hover {
+  background: rgba(176,124,216,0.1);
+  border-color: rgba(176,124,216,0.3);
+  color: #8b6ab0;
+}
+.year-btn.active {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+  color: #fff; border-color: transparent;
+  box-shadow: 0 4px 12px rgba(176,124,216,0.2);
+}
+
+/* --- 年度榜单展示 --- */
+.year-rank-content { margin-top: 0.5rem; }
+.year-rank-content.hidden { display: none; }
+
+.year-card {
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1rem;
+}
+.year-card-header {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(176,124,216,0.08);
+}
+.year-card-header h3 {
+  font-size: 1.2rem; font-weight: 600;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.year-card-header .year-badge {
+  font-size: 0.75rem; padding: 0.2rem 0.8rem;
+  border-radius: 100px;
+  background: linear-gradient(135deg, rgba(245,160,184,0.15), rgba(176,124,216,0.15));
+  color: #8b6ab0; font-weight: 500;
+}
+
+.year-top3 {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.top3-card {
+  text-align: center; padding: 1rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.top3-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.5); }
+.top3-card .top3-rank {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 0.8rem;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+  color: #fff;
+}
+.top3-card .top3-rank.gold { background: linear-gradient(135deg, #f5b342, #f5a0b8); box-shadow: 0 4px 12px rgba(245,160,184,0.3); }
+.top3-card .top3-rank.silver { background: linear-gradient(135deg, #c0c0c0, #e0e0e0); }
+.top3-card .top3-rank.bronze { background: linear-gradient(135deg, #cd7f32, #daa520); }
+.top3-card img {
+  width: 80px; height: 110px; border-radius: 8px; object-fit: cover;
+  margin-bottom: 0.6rem; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.top3-card .top3-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+.top3-card .top3-author { font-size: 0.7rem; color: var(--text-muted); }
+
+.year-list-mini { display: flex; flex-direction: column; gap: 0.4rem; }
+.year-list-mini .rank-item-full { padding: 0.6rem 1rem; }
+.year-list-mini .rank-item-full img { width: 36px; height: 50px; }
+.year-list-mini .rank-item-full .rf-title { font-size: 0.85rem; }
+
+/* --- 响应式 --- */
+@media (max-width: 768px) {
+  .year-top3 { grid-template-columns: 1fr; }
+  .rank-item-full .rf-meta { display: none; }
+  .tab-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+}

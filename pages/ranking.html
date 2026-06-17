@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 排行榜 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/pages/ranking.css">
+</head>
+<body>
+
+<div class="deco">🏆</div>
+<div class="deco">📊</div>
+<div class="deco">⭐</div>
+<div class="deco">🔥</div>
+
+<div class="content">
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="./library.html" class="nav-logo">✦ 次元书屋</a>
+    <div class="nav-links">
+      <a href="./library.html">文库</a>
+      <a href="./bookshelf.html">书架</a>
+      <a href="./ranking.html" class="active">排行</a>
+      <a href="./user.html">我的</a>
+    </div>
+    <div class="nav-user">
+      <span class="avatar">三</span>
+      <span>张三</span>
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="section-header" style="justify-content:center; margin-bottom: 1rem;">
+    <h2>🏆 轻小说排行榜</h2>
+  </div>
+
+  <!-- 榜单标签切换 -->
+  <div class="rank-tabs">
+    <button class="tab-btn active" onclick="switchTab('hot')" id="tab-hot">🔥 最高热度</button>
+    <button class="tab-btn" onclick="switchTab('new')" id="tab-new">✨ 新云榜</button>
+    <button class="tab-btn" onclick="switchTab('year')" id="tab-year">📅 今年热度</button>
+    <button class="tab-btn" onclick="switchTab('month')" id="tab-month">📆 本月热度</button>
+  </div>
+
+  <!-- 动态榜单内容区 -->
+  <div class="rank-panel" id="rankPanel"></div>
+
+</section>
+
+<!-- 历年「这本轻小说真厉害」 -->
+<section class="section">
+  <div class="section-header">
+    <h2>📖 这本轻小说真厉害！历年榜单</h2>
+    <span style="font-size:.8rem;color:rgba(61,61,74,.3);font-weight:300;">2015 — 2026</span>
+  </div>
+
+  <!-- 年份选择器 -->
+  <div class="year-selector" id="yearSelector"></div>
+
+  <!-- 年度榜单内容 -->
+  <div class="year-rank-content" id="yearRankContent"></div>
+</section>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="./library.html">返回文库</a>
+    <a href="../index.html">退出登录</a>
+  </div>
+  <p>🌸 次元书屋 · 为每一位轻小说爱好者打造</p>
+</footer>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/pages/ranking.js"></script>
+</body>
+</html>
