@@ -5,7 +5,7 @@
 
 const State = {
   data: {
-    user: null,          // 当前登录用户 {name, avatar}
+    user: { name: '张三', avatar: null },          // 当前登录用户 {name, avatar}
     theme: 'default',    // 当前主题
     bookshelf: [],       // 书架 [{novelId, chapterId, timestamp}]
     history: [],         // 阅读历史 [{novelId, chapterId, progress, timestamp}]
