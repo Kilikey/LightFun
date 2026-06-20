@@ -255,8 +255,11 @@ const YEARLY_RANKS = {
 /* ---------- 初始化 ---------- */
 let currentTab = 'hot';
 let currentYear = 2026;
+let userRatings = {};
 
 (function init() {
+  // 加载用户评分
+  userRatings = Storage.get('ratings') || {};
   renderTab('hot');
   renderYearSelector();
   renderYearRank(2026);
@@ -275,31 +278,37 @@ function renderTab(tab) {
   let list = [];
   let title = '';
 
+  // 合并用户评分
+  const novelsWithRating = [...NOVELS].map(n => ({
+    ...n,
+    displayScore: userRatings[n.id] ? (6.5 + userRatings[n.id] * 0.7).toFixed(1) : n.score
+  }));
+
   switch(tab) {
     case 'hot':
-      list = [...NOVELS].sort((a, b) => b.score - a.score).slice(0, 20);
+      list = novelsWithRating.sort((a, b) => b.displayScore - a.displayScore).slice(0, 20);
       title = '🔥 最高热度榜 — 全站评分最高的20部轻小说';
       break;
     case 'new':
       // 新云榜：2024-2025年的热门新作（id 37-50 + 一些高分的）
-      list = [...NOVELS].filter(n => n.id >= 37 || (n.id >= 21 && n.score >= 8.5))
-        .sort((a, b) => b.score - a.score).slice(0, 20);
+      list = novelsWithRating.filter(n => n.id >= 37 || (n.id >= 21 && n.displayScore >= 8.5))
+        .sort((a, b) => b.displayScore - a.displayScore).slice(0, 20);
       title = '✨ 新云榜 — 近年的热门新作推荐';
       break;
     case 'year':
       // 今年热度：2025年榜单作品
-      list = [...NOVELS].filter(n =>
+      list = novelsWithRating.filter(n =>
         ['败犬女主太多了','不时轻声地以俄语遮羞的邻座艾莉同学','关于邻家的天使大人','义妹生活','叹息的亡灵好想退隐','间谍教室'].includes(n.title)
-      ).sort((a, b) => b.score - a.score);
+      ).sort((a, b) => b.displayScore - a.displayScore);
       // 补充一些高分作品
-      const extra = [...NOVELS].filter(n => n.score >= 8.5 && !list.includes(n)).slice(0, 10);
+      const extra = novelsWithRating.filter(n => n.displayScore >= 8.5 && !list.includes(n)).slice(0, 10);
       list = [...list, ...extra].slice(0, 20);
       title = '📅 2025年度热度榜 — 今年最火爆的轻小说';
       break;
     case 'month':
       // 本月热度：连载中的近期更新作品
-      list = [...NOVELS].filter(n => n.status === 'ongoing')
-        .sort((a, b) => b.score - a.score).slice(0, 20);
+      list = novelsWithRating.filter(n => n.status === 'ongoing')
+        .sort((a, b) => b.displayScore - a.displayScore).slice(0, 20);
       title = '📆 本月连载热度 — 正在连载中的热门作品';
       break;
   }
@@ -313,6 +322,10 @@ function renderTab(tab) {
 function renderRankItem(n, rank) {
   const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
   const tags = n.tags.slice(0, 2).map(t => `<span class="rf-tag">${t}</span>`).join('');
+  const hasUserRating = userRatings[n.id];
+  const scoreDisplay = hasUserRating
+    ? `<span style="color:var(--color-gold)">${n.displayScore}</span> <span style="font-size:0.7rem;color:var(--text-muted)">(你评${userRatings[n.id]}星)</span>`
+    : n.displayScore;
   return `
     <div class="rank-item-full" onclick="location.href='reader.html?id=${n.id}'">
       <div class="rank-num-full ${rankClass}">${rank}</div>
@@ -322,7 +335,7 @@ function renderRankItem(n, rank) {
         <div class="rf-author">${n.author}</div>
       </div>
       <div class="rf-meta">
-        <span class="stars">${Formatter.renderStars(n.score)}</span> ${n.score}
+        <span class="stars">${Formatter.renderStars(n.displayScore)}</span> ${scoreDisplay}
         ${tags}
         <span>📖 ${n.chapters}章</span>
       </div>
