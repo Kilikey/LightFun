@@ -245,6 +245,15 @@ let curSlide = 0, slideTimer;
       .then(data => console.log('📚 novels.json 验证通过，共', data.length, '条'))
       .catch(() => {});
   } catch(e) {}
+
+  // 检测 URL 搜索参数，自动填入并执行搜索
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if (q) {
+    document.getElementById('searchInput').value = q;
+    filterNovels();
+    document.getElementById('allNovels').scrollIntoView({ behavior: 'smooth' });
+  }
 })();
 
 /* ---------- 轮播 ---------- */

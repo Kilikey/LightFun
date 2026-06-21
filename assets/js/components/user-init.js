@@ -235,3 +235,15 @@
     renderNavUser();
   });
 })();
+
+/* ============================================================
+   跨页面搜索跳转 (handleNavSearch)
+   ============================================================ */
+window.handleNavSearch = function(event) {
+  if (event.key === 'Enter') {
+    const query = event.target.value.trim();
+    if (query) {
+      window.location.href = './library.html?q=' + encodeURIComponent(query);
+    }
+  }
+};
