@@ -43,6 +43,7 @@ let fullNovels = []; // 从 novels.json 加载的完整数据
       bindScroll();
       bindBackTop();
       saveHistory(currentNovel.id, currentChapter);
+      updateBookshelfBtn();
     })
     .catch(() => {
       // 降级：使用基础数据
@@ -532,9 +533,12 @@ function saveHistory(novelId, ch) {
 function updateProgress() {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = pct + '%';
+  const scrollPct = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+  document.getElementById('progressFill').style.width = scrollPct + '%';
+  // 显示章节进度，tooltip 显示页面阅读进度
+  const pt = document.getElementById('progressText');
+  pt.textContent = `${currentChapter} / ${totalChapters}`;
+  pt.title = `本章阅读进度 ${scrollPct}%`;
 }
 function bindScroll() {
   window.addEventListener('scroll', () => {
@@ -568,6 +572,33 @@ document.addEventListener('touchend', e => {
     else prevChapter();
   }
 });
+
+/* ---------- 加入书架 ---------- */
+function addCurrentToBookshelf() {
+  if (!currentNovel) return;
+  const bs = Storage.get('bookshelf') || [];
+  if (!bs.includes(currentNovel.id)) {
+    bs.push(currentNovel.id);
+    Storage.set('bookshelf', bs);
+    showToast('❤️ 已加入书架');
+    updateBookshelfBtn();
+  } else {
+    showToast('💡 该书已在书架中');
+  }
+}
+
+function updateBookshelfBtn() {
+  const btn = document.getElementById('btnBookshelf');
+  if (!btn || !currentNovel) return;
+  const bs = Storage.get('bookshelf') || [];
+  if (bs.includes(currentNovel.id)) {
+    btn.textContent = '✅ 已收藏';
+    btn.style.color = '#e86a92';
+  } else {
+    btn.textContent = '❤️ 书架';
+    btn.style.color = '';
+  }
+}
 
 /* ---------- 返回 ---------- */
 function goBack() {

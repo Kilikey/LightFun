@@ -697,7 +697,13 @@ function closeModal() {
 
 /* ---------- 书架/阅读入口 ---------- */
 function startReading(id) {
-  window.location.href = 'reader.html?id=' + id;
+  const progress = Storage.get('readProgress') || {};
+  const readChapters = progress[id] || [];
+  let ch = 1;
+  if (readChapters.length > 0) {
+    ch = Math.max(...readChapters);
+  }
+  window.location.href = `reader.html?id=${id}&ch=${ch}`;
 }
 function addToBookshelf(id) {
   const bs = Storage.get('bookshelf') || [];
