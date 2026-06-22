@@ -413,6 +413,8 @@ function renderCatalog() {
   const pct = totalChapters > 0 ? Math.round((totalRead / totalChapters) * 100) : 0;
   const lastRead = totalRead > 0 ? Math.max(...readChapters) : 0;
 
+  const isOnShelf = (Storage.get('bookshelf') || []).includes(currentNovel.id);
+
   // 目录头部：阅读进度 + 继续阅读
   const headerHtml = `
     <div class="catalog-progress-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(176,124,216,0.08); background: rgba(176,124,216,0.04);">
@@ -425,6 +427,7 @@ function renderCatalog() {
       </div>
       ${lastRead > 0 ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;">上次读到：第${lastRead}章</div>` : ''}
       ${lastRead > 0 && lastRead < totalChapters ? `<button onclick="loadChapter(${lastRead + 1});toggleCatalog();" style="width:100%;padding:0.5rem;border-radius:10px;border:1px solid rgba(176,124,216,0.2);background:linear-gradient(135deg,var(--color-secondary),var(--color-primary-light));color:#fff;font-size:0.8rem;font-family:inherit;cursor:pointer;transition:all 0.2s ease;">▶ 继续阅读第${lastRead + 1}章</button>` : ''}
+      ${!isOnShelf ? `<button onclick="addCurrentToBookshelf();renderCatalog();" style="width:100%;padding:0.5rem;border-radius:10px;border:1px solid rgba(176,124,216,0.15);background:rgba(176,124,216,0.05);color:var(--text-primary);font-size:0.8rem;font-family:inherit;cursor:pointer;transition:all 0.2s ease;margin-top:0.5rem;">❤️ 加入书架</button>` : `<div style="font-size:0.75rem;color:#4caf50;text-align:center;margin-top:0.5rem;">✅ 已在书架中</div>`}
     </div>
   `;
 
