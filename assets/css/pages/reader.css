@@ -22,8 +22,16 @@
 #readerBody[data-theme="dark"] .chapter-text { color: #c0c0c8; }
 #readerBody[data-theme="dark"] .catalog-drawer { background: #36364a; color: #d0d0d8; }
 #readerBody[data-theme="dark"] .settings-panel { background: #36364a; color: #d0d0d8; }
+#readerBody[data-theme="dark"] .catalog-item { color: #d0d0d8; }
 #readerBody[data-theme="dark"] .catalog-item:hover { background: rgba(255,255,255,0.06); }
-#readerBody[data-theme="dark"] .catalog-item.active { background: rgba(176,124,216,0.15); }
+#readerBody[data-theme="dark"] .catalog-item.active { background: rgba(176,124,216,0.15); color: #d0d0d8; }
+#readerBody[data-theme="dark"] .catalog-item .read-mark { color: #b88cd8; }
+#readerBody[data-theme="dark"] .catalog-progress-header { background: rgba(176,124,216,0.08); border-color: rgba(255,255,255,0.06); }
+#readerBody[data-theme="dark"] .close-drawer { background: rgba(255,255,255,0.08); color: #d0d0d8; }
+#readerBody[data-theme="dark"] .close-drawer:hover { background: rgba(255,255,255,0.15); }
+#readerBody[data-theme="dark"] .settings-body .setting-control button { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: #d0d0d8; }
+#readerBody[data-theme="dark"] .settings-body .setting-control button:hover { background: rgba(255,255,255,0.15); }
+#readerBody[data-theme="dark"] .settings-body .theme-dot { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 
 /* --- 顶部工具栏 --- */
 .reader-toolbar {
