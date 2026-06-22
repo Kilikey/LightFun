@@ -390,6 +390,8 @@ function loadChapter(ch) {
   // 保存进度
   saveProgress(currentNovel.id, ch);
   saveHistory(currentNovel.id, ch);
+  // 重置本章已读标记（用于滚动自动标记）
+  chapterReadMarked = false;
 
   // 滚动到顶部
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -556,6 +558,7 @@ function saveHistory(novelId, ch) {
 }
 
 /* ---------- 滚动进度 ---------- */
+let chapterReadMarked = false;
 function updateProgress() {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -565,6 +568,18 @@ function updateProgress() {
   const pt = document.getElementById('progressText');
   pt.textContent = `${currentChapter} / ${totalChapters}`;
   pt.title = `本章阅读进度 ${scrollPct}%`;
+  // 滚动到95%以上自动标记本章为已读
+  if (scrollPct >= 95 && !chapterReadMarked && currentNovel) {
+    const progress = Storage.get('readProgress') || {};
+    if (!progress[currentNovel.id]) progress[currentNovel.id] = [];
+    if (!progress[currentNovel.id].includes(currentChapter)) {
+      progress[currentNovel.id].push(currentChapter);
+      Storage.set('readProgress', progress);
+      chapterReadMarked = true;
+      // 更新目录显示
+      renderCatalog();
+    }
+  }
 }
 function bindScroll() {
   window.addEventListener('scroll', () => {
@@ -576,6 +591,7 @@ function bindScroll() {
 }
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  chapterReadMarked = false;
 }
 
 /* ---------- 键盘/触摸 ---------- */
