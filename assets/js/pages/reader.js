@@ -466,11 +466,13 @@ function loadSettings() {
   const fontSize = settings.fontSize || 18;
   const lineHeight = settings.lineHeight || 1.8;
   const theme = settings.theme || 'light';
+  const fontFamily = settings.fontFamily || 'sans';
   scrollMode = settings.scrollMode || 'scroll';
 
   setFontSize(fontSize);
   setLineHeight(lineHeight);
   setTheme(theme);
+  setFontFamily(fontFamily, false);
   setScrollMode(scrollMode);
 }
 
@@ -515,6 +517,20 @@ function setScrollMode(mode) {
   saveSettings();
 }
 
+const FONT_MAP = {
+  sans: "'Noto Sans SC', 'Quicksand', sans-serif",
+  serif: "'Noto Serif SC', 'SimSun', 'STSong', serif",
+  kai: "'KaiTi', 'STKaiti', '楷体', serif"
+};
+function setFontFamily(family, shouldSave = true) {
+  const el = document.getElementById('chapterText');
+  el.style.fontFamily = FONT_MAP[family] || FONT_MAP.sans;
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('btnFont' + (family.charAt(0).toUpperCase() + family.slice(1)));
+  if (btn) btn.classList.add('active');
+  if (shouldSave) saveSettings();
+}
+
 function toggleSettings() {
   const panel = document.getElementById('settingsPanel');
   const overlay = document.getElementById('settingsOverlay');
@@ -534,9 +550,17 @@ function saveSettings() {
     fontSize: parseFloat(window.getComputedStyle(el).fontSize),
     lineHeight: parseFloat(window.getComputedStyle(el).lineHeight) || 1.8,
     theme: document.body.getAttribute('data-theme') || 'light',
+    fontFamily: getCurrentFontFamily(),
     scrollMode: scrollMode
   };
   Storage.set('readerSettings', settings);
+}
+
+function getCurrentFontFamily() {
+  const computed = window.getComputedStyle(document.getElementById('chapterText')).fontFamily;
+  if (computed.includes('KaiTi') || computed.includes('STKaiti') || computed.includes('楷体')) return 'kai';
+  if (computed.includes('Serif') || computed.includes('SimSun') || computed.includes('STSong')) return 'serif';
+  return 'sans';
 }
 
 /* ---------- 进度保存 ---------- */

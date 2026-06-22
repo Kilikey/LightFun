@@ -61,6 +61,14 @@
       </div>
     </div>
     <div class="setting-item">
+      <label>字体选择</label>
+      <div class="setting-control" id="fontFamilyControl">
+        <button class="font-btn active" onclick="setFontFamily('sans')" id="btnFontSans">默认</button>
+        <button class="font-btn" onclick="setFontFamily('serif')" id="btnFontSerif">宋体</button>
+        <button class="font-btn" onclick="setFontFamily('kai')" id="btnFontKai">楷体</button>
+      </div>
+    </div>
+    <div class="setting-item">
       <label>翻页方式</label>
       <div class="setting-control">
         <button class="mode-btn active" onclick="setScrollMode('scroll')" id="btnScroll">滚动</button>

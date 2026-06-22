@@ -137,6 +137,17 @@
 .mode-btn { width: auto !important; padding: 0 1rem !important; font-size: 0.8rem !important; }
 .mode-btn.active { background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light)) !important; color: #fff !important; border-color: transparent !important; }
 
+/* 字体按钮 */
+.font-btn {
+  width: auto !important; padding: 0 0.8rem !important; font-size: 0.75rem !important;
+  border-radius: 8px; border: 1px solid rgba(176,124,216,0.2);
+  background: rgba(176,124,216,0.05); color: var(--text-primary);
+  cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+  height: 36px; display: flex; align-items: center; justify-content: center;
+}
+.font-btn:hover { background: rgba(176,124,216,0.12); border-color: rgba(176,124,216,0.3); }
+.font-btn.active { background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light)); color: #fff !important; border-color: transparent !important; }
+
 /* --- 阅读内容区 --- */
 .reader-content {
   max-width: 720px; margin: 0 auto;
