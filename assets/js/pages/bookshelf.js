@@ -47,6 +47,26 @@ function renderBookshelf() {
   if (shelfIds.length === 0) {
     grid.style.display = 'none';
     empty.style.display = 'block';
+    // 显示最近阅读推荐
+    const recent = history.slice(0, 4).filter(h => NOVELS_MAP[h.id]);
+    if (recent.length > 0) {
+      let recentHtml = '<div style="margin-top:2rem;text-align:left;"><h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;">📖 最近阅读</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;">';
+      recent.forEach(h => {
+        const n = NOVELS_MAP[h.id];
+        recentHtml += `
+          <div class="shelf-card" onclick="location.href='reader.html?id=${h.id}&ch=${h.chapter}'" style="cursor:pointer">
+            <div class="cover-wrap" style="aspect-ratio:3/4;overflow:hidden;border-radius:12px 12px 0 0;">
+              <img src="${n.cover}" alt="${n.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+            <div class="shelf-info" style="padding:0.7rem 0.8rem;">
+              <h4 style="font-size:0.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:0.15rem;">${n.title}</h4>
+              <div class="author" style="font-size:0.7rem;color:rgba(61,61,74,0.4);">第${h.chapter}章</div>
+            </div>
+          </div>`;
+      });
+      recentHtml += '</div></div>';
+      empty.innerHTML += recentHtml;
+    }
     return;
   }
 
