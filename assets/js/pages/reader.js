@@ -36,6 +36,7 @@ let fullNovels = []; // 从 novels.json 加载的完整数据
       currentChapter = Math.min(Math.max(startCh, 1), totalChapters);
 
       document.getElementById('novelTitle').textContent = currentNovel.title;
+      document.title = '📖 ' + currentNovel.title + ' · 次元书屋';
       loadSettings();
       renderCatalog();
       loadChapter(currentChapter);
