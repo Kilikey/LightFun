@@ -448,6 +448,13 @@ function toggleCatalog() {
   } else {
     drawer.classList.add('open');
     overlay.classList.add('show');
+    // 打开目录后自动滚动到当前章节
+    setTimeout(() => {
+      const active = drawer.querySelector('.catalog-item.active');
+      if (active) {
+        active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 350);
   }
 }
 
