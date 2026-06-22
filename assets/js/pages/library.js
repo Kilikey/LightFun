@@ -453,7 +453,8 @@ function sortSearchResults(by) {
   renderNovelGrid(sorted, currentSearchQuery);
 }
 
-/* ---------- 搜索面板交互 ---------- */
+/* ---------- 搜索防抖 ---------- */
+let searchDebounceTimer = null;
 function handleSearchInput() {
   const q = document.getElementById('searchInput').value.trim();
   currentSearchQuery = q;
@@ -465,6 +466,11 @@ function handleSearchInput() {
     document.getElementById('searchSuggestions').style.display = 'block';
     document.getElementById('searchHistory').style.display = 'none';
     document.getElementById('searchHot').style.display = 'none';
+    // 防抖自动搜索：停止输入 400ms 后自动执行
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+      filterNovels();
+    }, 400);
   } else {
     document.getElementById('searchClear').style.display = 'none';
     document.getElementById('searchSuggestions').style.display = 'none';
@@ -472,6 +478,9 @@ function handleSearchInput() {
     renderHotSearch();
     document.getElementById('searchHistory').style.display = 'block';
     document.getElementById('searchHot').style.display = 'block';
+    if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
+    renderNovelGrid(NOVELS);
+    document.getElementById('novelCount').textContent = '共 ' + NOVELS.length + ' 部';
   }
   showSearchPanel();
 }
