@@ -390,7 +390,9 @@ function loadChapter(ch) {
 
   // 更新按钮状态
   document.getElementById('btnPrev').disabled = ch <= 1;
-  document.getElementById('btnNext').disabled = ch >= totalChapters;
+  const nextBtn = document.getElementById('btnNext');
+  nextBtn.disabled = ch >= totalChapters;
+  nextBtn.textContent = ch >= totalChapters ? '✅ 已读完' : '下一章 →';
 
   // 保存进度
   saveProgress(currentNovel.id, ch);
