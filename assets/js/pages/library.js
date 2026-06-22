@@ -625,15 +625,33 @@ function openModal(id) {
   if(!n) return;
   const ratings = Storage.get('ratings') || {};
   const myRating = ratings[id] || 0;
+  const progress = Storage.get('readProgress') || {};
+  const readChapters = progress[id] || [];
+  const totalRead = readChapters.length;
+  const readPct = totalRead > 0 ? Math.round((totalRead / n.chapters) * 100) : 0;
+  const lastRead = totalRead > 0 ? Math.max(...readChapters) : 0;
+  const isOnShelf = (Storage.get('bookshelf') || []).includes(id);
   const el = document.getElementById('modalBody');
   el.innerHTML = `
     <img src="${n.cover}" alt="${n.title}" onerror="this.style.display='none'">
     <div class="m-info">
       <h2>${n.title}</h2>
       <div class="m-author">✎ ${n.author}</div>
-      <div class="m-tags">${n.tags.map(t=>'<span>#'+t+'</span>').join('')}</div>
+      <div class="m-tags">${n.tags.map(t=>'#'+t).join(' ')}</div>
       <div class="m-desc">${n.desc}</div>
       <div class="m-chapters">📖 共 ${n.chapters} 章 · ${n.status==='completed'?'✅ 已完结':'🔄 连载中'}<br>⭐ ${Formatter.renderStars(n.score)} ${n.score}</div>
+      ${totalRead > 0 ? `
+        <div class="m-read-progress" style="margin-top:0.8rem;padding:0.6rem 1rem;background:rgba(176,124,216,0.06);border-radius:12px;border:1px solid rgba(176,124,216,0.1);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+            <span style="font-size:0.8rem;font-weight:500;">📖 阅读进度</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">${totalRead} / ${n.chapters} 章 (${readPct}%)</span>
+          </div>
+          <div style="height:4px;background:rgba(176,124,216,0.1);border-radius:2px;overflow:hidden;">
+            <span style="display:block;height:100%;width:${readPct}%;background:linear-gradient(90deg,var(--color-secondary),var(--color-primary-light));border-radius:2px;"></span>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;">上次读到：第${lastRead}章</div>
+        </div>
+      ` : ''}
       <div class="m-rating" style="margin-top:1rem;">
         <span style="font-size:0.8rem;color:rgba(61,61,74,0.4);margin-right:0.5rem;">我的评分:</span>
         <span class="rate-stars" id="rateStars" style="cursor:pointer;font-size:1.1rem;color:var(--color-gold);" onmouseleave="renderRateStars(${id},${myRating})">
@@ -642,8 +660,8 @@ function openModal(id) {
         <span id="rateScore" style="font-size:0.75rem;color:var(--text-muted);margin-left:0.3rem;">${myRating ? myRating + '星' : '未评分'}</span>
       </div>
       <div style="margin-top:1rem;">
-        <button class="read-btn" onclick="startReading(${n.id})">开始阅读</button>
-        <button class="read-btn" style="margin-left:0.5rem;background:linear-gradient(135deg,#f5b342,#f5a0b8);" onclick="addToBookshelf(${n.id})">❤️ 加入书架</button>
+        <button class="read-btn" onclick="startReading(${n.id})">${totalRead > 0 ? '▶ 继续阅读' : '开始阅读'}</button>
+        <button class="read-btn" style="margin-left:0.5rem;background:linear-gradient(135deg,#f5b342,#f5a0b8);" onclick="addToBookshelf(${n.id})">${isOnShelf ? '✅ 已在书架' : '❤️ 加入书架'}</button>
       </div>
     </div>`;
   document.getElementById('modal').classList.add('show');

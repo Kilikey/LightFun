@@ -406,14 +406,32 @@ function renderCatalog() {
   const list = document.getElementById('catalogList');
   const progress = Storage.get('readProgress') || {};
   const readChapters = progress[currentNovel.id] || [];
+  const totalRead = readChapters.length;
+  const pct = totalChapters > 0 ? Math.round((totalRead / totalChapters) * 100) : 0;
+  const lastRead = totalRead > 0 ? Math.max(...readChapters) : 0;
 
-  let html = '';
+  // 目录头部：阅读进度 + 继续阅读
+  const headerHtml = `
+    <div class="catalog-progress-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(176,124,216,0.08); background: rgba(176,124,216,0.04);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <span style="font-size:0.8rem;font-weight:600;">📖 阅读进度</span>
+        <span style="font-size:0.75rem;color:var(--text-muted);">${totalRead} / ${totalChapters} 章 (${pct}%)</span>
+      </div>
+      <div style="height:4px;background:rgba(176,124,216,0.1);border-radius:2px;overflow:hidden;margin-bottom:0.5rem;">
+        <span style="display:block;height:100%;width:${pct}%;background:linear-gradient(90deg,var(--color-secondary),var(--color-primary-light));border-radius:2px;transition:width 0.5s ease;"></span>
+      </div>
+      ${lastRead > 0 ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.4rem;">上次读到：第${lastRead}章</div>` : ''}
+      ${lastRead > 0 && lastRead < totalChapters ? `<button onclick="loadChapter(${lastRead + 1});toggleCatalog();" style="width:100%;padding:0.5rem;border-radius:10px;border:1px solid rgba(176,124,216,0.2);background:linear-gradient(135deg,var(--color-secondary),var(--color-primary-light));color:#fff;font-size:0.8rem;font-family:inherit;cursor:pointer;transition:all 0.2s ease;">▶ 继续阅读第${lastRead + 1}章</button>` : ''}
+    </div>
+  `;
+
+  let html = headerHtml;
   for (let i = 1; i <= totalChapters; i++) {
     const isRead = readChapters.includes(i);
     html += `
-      <div class="catalog-item ${i === currentChapter ? 'active' : ''}" data-ch="${i}" onclick="loadChapter(${i}); toggleCatalog();">
+      <div class="catalog-item ${i === currentChapter ? 'active' : ''} ${isRead ? 'read' : ''}" data-ch="${i}" onclick="loadChapter(${i}); toggleCatalog();">
         <span>第${i}章</span>
-        ${isRead ? '<span class="read-mark">已读</span>' : ''}
+        ${isRead ? '<span class="read-mark">✓</span>' : ''}
       </div>`;
   }
   list.innerHTML = html;
