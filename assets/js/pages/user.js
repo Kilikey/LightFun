@@ -77,6 +77,15 @@ const FONT_NAME = { sans: '默认', serif: '宋体', kai: '楷体' };
   document.getElementById('statShelf').textContent = shelf.length;
   document.getElementById('statRatings').textContent = ratingCount;
 
+  // 阅读时长估算（每章约6分钟）
+  const totalMinutes = totalChapters * 6;
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+  let timeText = '';
+  if (hours > 0) timeText += hours + '小时';
+  if (mins > 0 || hours === 0) timeText += (hours > 0 ? '' : '') + mins + '分钟';
+  document.getElementById('readTime').textContent = timeText;
+
   // 阅读历史
   const historyList = document.getElementById('historyList');
   const emptyHistory = document.getElementById('emptyHistory');
