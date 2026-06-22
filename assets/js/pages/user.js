@@ -83,8 +83,9 @@ const FONT_NAME = { sans: '默认', serif: '宋体', kai: '楷体' };
   const mins = totalMinutes % 60;
   let timeText = '';
   if (hours > 0) timeText += hours + '小时';
-  if (mins > 0 || hours === 0) timeText += (hours > 0 ? '' : '') + mins + '分钟';
-  document.getElementById('readTime').textContent = timeText;
+  if (mins > 0 || hours === 0) timeText += mins + '分钟';
+  const readTimeEl = document.getElementById('readTime');
+  if (readTimeEl) readTimeEl.textContent = totalMinutes === 0 ? '还没有阅读记录，快去文库发现好书吧~' : timeText;
 
   // 阅读历史
   const historyList = document.getElementById('historyList');
