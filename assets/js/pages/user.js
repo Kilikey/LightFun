@@ -122,6 +122,23 @@ const MODE_NAME = { scroll: '滚动', page: '分页' };
     }).join('');
   }
 
+  // 书架迷你入口
+  const shelfMini = document.getElementById('shelfMini');
+  const emptyShelf = document.getElementById('emptyShelf');
+  if (shelf.length === 0) {
+    shelfMini.style.display = 'none';
+    emptyShelf.style.display = 'block';
+  } else {
+    shelfMini.innerHTML = shelf.slice(0, 5).map(id => {
+      const n = NOVELS_MAP[id] || NOVELS_MAP[1];
+      return `
+        <div class="shelf-mini-item" onclick="location.href='reader.html?id=${id}'">
+          <img src="${n.cover}" alt="${n.title}" onerror="this.style.display='none'">
+          <div class="s-mini-title">${n.title}</div>
+        </div>`;
+    }).join('');
+  }
+
   // 阅读偏好
   document.getElementById('prefFontSize').textContent = (settings.fontSize || 18) + 'px';
   document.getElementById('prefLineHeight').textContent = (settings.lineHeight || 1.8).toFixed(1);

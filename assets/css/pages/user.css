@@ -123,6 +123,23 @@
 }
 .pref-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(176,124,216,0.25); }
 
+/* --- 书架迷你入口 --- */
+.shelf-mini { display: flex; gap: 1rem; flex-wrap: wrap; }
+.shelf-mini-item {
+  display: flex; flex-direction: column; align-items: center;
+  width: 80px; cursor: pointer; transition: all 0.25s ease;
+}
+.shelf-mini-item:hover { transform: translateY(-4px); }
+.shelf-mini-item img {
+  width: 80px; height: 110px; border-radius: 8px; object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.25s ease;
+}
+.shelf-mini-item:hover img { box-shadow: 0 8px 20px rgba(150,100,180,0.15); }
+.s-mini-title {
+  font-size: 0.75rem; font-weight: 500; margin-top: 0.4rem;
+  text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+}
+
 /* --- 空状态 --- */
 .empty-mini { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.85rem; }
 
