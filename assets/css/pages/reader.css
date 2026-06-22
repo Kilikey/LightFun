@@ -19,6 +19,8 @@
 #readerBody[data-theme="dark"] .reader-footer { background: rgba(45,45,58,0.95); border-color: rgba(255,255,255,0.05); }
 #readerBody[data-theme="dark"] .tool-btn { color: #d0d0d8; }
 #readerBody[data-theme="dark"] .nav-btn { background: rgba(255,255,255,0.08); color: #d0d0d8; }
+#readerBody[data-theme="dark"] .progress-bar { background: rgba(255,255,255,0.08); }
+#readerBody[data-theme="dark"] .progress-text { color: rgba(255,255,255,0.4); }
 #readerBody[data-theme="dark"] .chapter-text { color: #c0c0c8; }
 #readerBody[data-theme="dark"] .catalog-drawer { background: #36364a; color: #d0d0d8; }
 #readerBody[data-theme="dark"] .settings-panel { background: #36364a; color: #d0d0d8; }
