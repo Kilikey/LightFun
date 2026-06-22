@@ -58,6 +58,7 @@ const NOVELS_MAP = {
 
 const THEME_NAME = { light: '浅色', sepia: '羊皮纸', dark: '夜间', green: '护眼' };
 const MODE_NAME = { scroll: '滚动', page: '分页' };
+const FONT_NAME = { sans: '默认', serif: '宋体', kai: '楷体' };
 
 (function init() {
   const history = Storage.get('readHistory') || [];
@@ -144,6 +145,7 @@ const MODE_NAME = { scroll: '滚动', page: '分页' };
   document.getElementById('prefLineHeight').textContent = (settings.lineHeight || 1.8).toFixed(1);
   document.getElementById('prefTheme').textContent = THEME_NAME[settings.theme || 'light'] || '浅色';
   document.getElementById('prefScrollMode').textContent = MODE_NAME[settings.scrollMode || 'scroll'] || '滚动';
+  document.getElementById('prefFontFamily').textContent = FONT_NAME[settings.fontFamily || 'sans'] || '默认';
 })();
 
 function timeAgo(ts) {
