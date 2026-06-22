@@ -102,11 +102,14 @@ const FONT_NAME = { sans: '默认', serif: '宋体', kai: '楷体' };
   // 评分记录
   const ratingList = document.getElementById('ratingList');
   const emptyRating = document.getElementById('emptyRating');
+  const clearRatingsBtn = document.getElementById('clearRatingsBtn');
   const ratingIds = Object.keys(ratings);
   if (ratingIds.length === 0) {
     ratingList.style.display = 'none';
     emptyRating.style.display = 'block';
+    if (clearRatingsBtn) clearRatingsBtn.style.display = 'none';
   } else {
+    if (clearRatingsBtn) clearRatingsBtn.style.display = 'inline';
     ratingList.innerHTML = ratingIds.map(id => {
       const n = NOVELS_MAP[id] || NOVELS_MAP[1];
       const score = ratings[id];
@@ -162,5 +165,12 @@ function clearHistory() {
   Storage.remove('readHistory');
   Storage.remove('readProgress');
   showToast('🗑️ 阅读历史已清空');
+  setTimeout(() => location.reload(), 400);
+}
+
+function clearRatings() {
+  if (!confirm('确定要清空所有评分记录吗？')) return;
+  Storage.remove('ratings');
+  showToast('🗑️ 评分记录已清空');
   setTimeout(() => location.reload(), 400);
 }
