@@ -56,6 +56,75 @@ const NOVELS = [
   { id:50, title:'回复术士的重启人生', author:'Shiokonbu', cover:'../covers/50.jpg', desc:'凯亚尔被公主芙列雅利用后抛弃。他在濒死之际获得了回复术士的「回复」能力，并发动了「时间倒流」——回到4年前，开始复仇。', tags:['异世界','战斗','黑暗','复仇'], chapters:189, status:'ongoing', score:6.6 }
 ];
 
+/* ---------- 标题到 ID 的映射（用于历年榜单跳转） ---------- */
+function findNovelIdByTitle(title) {
+  // 直接匹配
+  const direct = NOVELS.find(n => n.title === title);
+  if (direct) return direct.id;
+  // 部分匹配（历年榜单中有些标题包含作品名在括号内）
+  const partial = NOVELS.find(n => title.includes(n.title));
+  if (partial) return partial.id;
+  // 特殊映射
+  const specialMap = {
+    '桐人（刀剑神域）': 2,
+    'abec（插画师）': 2,
+    '御坂美琴（魔法禁书目录）': 5,
+    '灰村清孝（插画师）': 5,
+    '上条当麻（魔法禁书目录）': 5,
+    '轻井泽惠（实力至上主义教室）': 4,
+    '椎名真昼（邻家天使）': 37,
+    'OVERLORD（不死者之王）': 21,
+    'OVERLORD': 21,
+    '龙王的工作！': 50,
+    '龙王的工作': 50,
+    '食锈末世录': 49,
+    '七魔剑支配天下': 48,
+    'Unnamed Memory': 48,
+    '佐佐木与文鸟小哔': 1,
+    '小书痴的下克上': 3,
+    '欢迎来到实力至上主义的教室': 4,
+    '实力至上主义的教室': 4,
+    '欢迎来到实力至上主义教室': 4,
+    '弹珠汽水瓶里的千岁同学': 6,
+    '千岁同学': 6,
+    '关于邻家的天使大人': 37,
+    '邻家天使': 37,
+    '不时轻声地以俄语遮羞的邻座艾莉同学': 38,
+    '艾莉同学': 38,
+    '败犬女主太多了': 39,
+    '败犬女主': 39,
+    '义妹生活': 42,
+    '叹息的亡灵好想退隐': 44,
+    '叹息的亡灵': 44,
+    '间谍教室': 43,
+    '在地下城寻求邂逅是否搞错了什么': 22,
+    '地错': 22,
+    '契约之吻': 47,
+    '侦探已经死了': 43,
+    ' bathtub生活': 30,
+    '浴缸生活': 30,
+    'Stella Step': 40,
+    '与不是女友的你，做超过恋人的事': 41,
+    '一周一次买下同班同学': 42,
+    '白色帝国': 5,
+    '献给你的故事': 6,
+    '纵星辰陨落，你仍将歌唱': 7,
+    '【悲报】大小姐系底边迷宫主播': 8,
+    '玩乐关系': 38,
+    '关于邻家的天使大人不知不觉把我惯成了废人这档子事': 37,
+    '区区转生无法填补心中的空缺': 39,
+    'δ和γ的理学部笔记系列': 40,
+    '告别余香': 41,
+    '这里是，终末停滞委员会。': 42,
+    '药屋少女的呢喃': 43,
+    '是谁杀死了勇者': 44,
+    '靠死亡游戏混饭吃': 45,
+    '与奔向透明夜晚的你的不可见恋爱': 37,
+    '我们的「阅读理解」出错了': 39,
+  };
+  return specialMap[title] || null;
+}
+
 /* ---------- 历年「这本轻小说真厉害」榜单数据 ---------- */
 const YEARLY_RANKS = {
   2026: {
@@ -368,8 +437,10 @@ function renderYearRank(year) {
 
   const top3 = data.top.map((n, i) => {
     const medal = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
+    const novelId = findNovelIdByTitle(n.title);
+    const clickAction = novelId ? `onclick="location.href='reader.html?id=${novelId}'" style="cursor:pointer"` : '';
     return `
-      <div class="top3-card" onclick="showToast('📖 ${n.title}')">
+      <div class="top3-card" ${clickAction}>
         <div class="top3-rank ${medal}">${n.rank}</div>
         <img src="${n.cover}" alt="${n.title}" onerror="this.src='../covers/01.jpg'">
         <div class="top3-title">${n.title}</div>
@@ -377,16 +448,19 @@ function renderYearRank(year) {
       </div>`;
   }).join('');
 
-  const list = data.list.map(n => `
-    <div class="rank-item-full" onclick="showToast('📖 ${n.title}')">
-      <div class="rank-num-full">${n.rank}</div>
-      <img src="${n.cover}" alt="${n.title}" onerror="this.src='../covers/01.jpg'" style="width:36px;height:50px">
-      <div class="rf-info">
-        <div class="rf-title">${n.title}</div>
-        <div class="rf-author">${n.author}</div>
-      </div>
-    </div>
-  `).join('');
+  const list = data.list.map(n => {
+    const novelId = findNovelIdByTitle(n.title);
+    const clickAction = novelId ? `onclick="location.href='reader.html?id=${novelId}'" style="cursor:pointer"` : '';
+    return `
+      <div class="rank-item-full" ${clickAction}>
+        <div class="rank-num-full">${n.rank}</div>
+        <img src="${n.cover}" alt="${n.title}" onerror="this.src='../covers/01.jpg'" style="width:36px;height:50px">
+        <div class="rf-info">
+          <div class="rf-title">${n.title}</div>
+          <div class="rf-author">${n.author}</div>
+        </div>
+      </div>`;
+  }).join('');
 
   el.innerHTML = `
     <div class="year-card">
