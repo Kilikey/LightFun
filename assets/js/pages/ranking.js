@@ -380,6 +380,13 @@ function renderTab(tab) {
         .sort((a, b) => b.displayScore - a.displayScore).slice(0, 20);
       title = '📆 本月连载热度 — 正在连载中的热门作品';
       break;
+    case 'mine':
+      // 我的评分：用户已评分的作品
+      const ratedIds = Object.keys(userRatings).map(Number);
+      list = novelsWithRating.filter(n => ratedIds.includes(n.id))
+        .sort((a, b) => userRatings[b.id] - userRatings[a.id]);
+      title = '⭐ 我的评分 — 你已评分的' + list.length + '部轻小说';
+      break;
   }
 
   panel.innerHTML = `
