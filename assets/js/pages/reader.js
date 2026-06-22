@@ -376,7 +376,12 @@ function loadChapter(ch) {
       return `<p>${p}</p><div class="divider">* * *</div>`;
     }
     return `<p>${p}</p>`;
-  }).join('');
+  }).join('') + (ch >= totalChapters ? `
+    <div style="text-align:center;margin:3rem 0 2rem;padding:1.5rem;background:rgba(176,124,216,0.06);border-radius:16px;border:1px solid rgba(176,124,216,0.1);">
+      <div style="font-size:1.2rem;margin-bottom:0.5rem;">🎉 已读完最后一章</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">感谢阅读《${currentNovel.title}》</div>
+      <button onclick="goBack()" style="padding:0.5rem 1.5rem;border-radius:100px;border:1px solid rgba(176,124,216,0.2);background:linear-gradient(135deg,var(--color-secondary),var(--color-primary-light));color:#fff;font-size:0.85rem;font-family:inherit;cursor:pointer;transition:all 0.2s ease;">返回文库 →</button>
+    </div>` : '');
 
   // 更新目录高亮
   document.querySelectorAll('.catalog-item').forEach(el => el.classList.remove('active'));
