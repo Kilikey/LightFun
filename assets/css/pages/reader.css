@@ -36,6 +36,9 @@
 #readerBody[data-theme="dark"] .settings-body .setting-control button:hover { background: rgba(255,255,255,0.15); }
 #readerBody[data-theme="dark"] .settings-body .theme-dot { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 
+/* 夜间模式 — 已读完提示 */
+#readerBody[data-theme="dark"] .chapter-text > div:last-child { background: rgba(176,124,216,0.1) !important; border-color: rgba(176,124,216,0.2) !important; }
+
 /* --- 顶部工具栏 --- */
 .reader-toolbar {
   position: sticky;
