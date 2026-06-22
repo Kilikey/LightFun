@@ -160,6 +160,12 @@ input, textarea {
   padding: 0 2rem;
 }
 
+/* ---------- 自定义滚动条 ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(176,124,216,0.25); border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(176,124,216,0.4); }
+
 /* ---------- 响应式断点 ---------- */
 @media (max-width: 768px) {
   .container { padding: 0 1rem; }
