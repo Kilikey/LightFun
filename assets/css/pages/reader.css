@@ -202,7 +202,7 @@
   white-space: nowrap;
 }
 .nav-btn:hover { background: rgba(176,124,216,0.18); }
-.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .progress-bar {
   flex: 1; height: 4px; background: rgba(176,124,216,0.1);
   border-radius: 2px; overflow: hidden;
