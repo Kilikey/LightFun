@@ -112,6 +112,38 @@
     <h2>📚 全部作品</h2>
     <span style="font-size:.8rem;color:rgba(61,61,74,.3);font-weight:300;" id="novelCount">共 0 部</span>
   </div>
+  <div class="filter-bar" id="filterBar">
+    <div class="filter-row">
+      <span class="filter-label">状态</span>
+      <div class="filter-options" data-filter="status">
+        <button class="filter-btn active" data-value="all">全部</button>
+        <button class="filter-btn" data-value="ongoing">📗 连载中</button>
+        <button class="filter-btn" data-value="completed">📘 已完结</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">评分</span>
+      <div class="filter-options" data-filter="score">
+        <button class="filter-btn active" data-value="all">全部</button>
+        <button class="filter-btn" data-value="9">⭐ 9.0+</button>
+        <button class="filter-btn" data-value="8">⭐ 8.0+</button>
+        <button class="filter-btn" data-value="7">⭐ 7.0+</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">排序</span>
+      <div class="filter-options" data-filter="sort">
+        <button class="filter-btn active" data-value="default">默认</button>
+        <button class="filter-btn" data-value="score">评分</button>
+        <button class="filter-btn" data-value="update">更新</button>
+        <button class="filter-btn" data-value="chapters">章节数</button>
+      </div>
+    </div>
+    <div class="filter-row filter-tags-row">
+      <span class="filter-label">标签</span>
+      <div class="filter-tag-list" id="filterTagList"></div>
+    </div>
+  </div>
   <div class="novel-grid" id="novelGrid"></div>
 </section>
 

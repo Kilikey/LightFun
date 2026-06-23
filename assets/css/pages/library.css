@@ -296,6 +296,86 @@
   box-shadow: 0 6px 20px rgba(176,124,216,.25);
 }
 
+/* ---------- 筛选器 ---------- */
+.filter-bar {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.filter-row.filter-tags-row {
+  align-items: flex-start;
+}
+.filter-label {
+  font-size: 0.8rem;
+  color: rgba(61,61,74,.4);
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 2.5rem;
+}
+.filter-options {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+  border: 1.5px solid rgba(176,124,216,.15);
+  background: rgba(255,255,255,.4);
+  color: rgba(61,61,74,.55);
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .25s ease;
+  font-weight: 400;
+}
+.filter-btn:hover {
+  border-color: rgba(176,124,216,.35);
+  background: rgba(176,124,216,.08);
+  color: #8b6ab0;
+}
+.filter-btn.active {
+  background: rgba(176,124,216,.15);
+  border-color: rgba(176,124,216,.45);
+  color: #6b4a90;
+  font-weight: 500;
+}
+.filter-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: 1;
+}
+.filter-tag-list .tag-chip {
+  padding: 0.25rem 0.8rem;
+  border-radius: 100px;
+  border: 1.5px solid rgba(176,124,216,.15);
+  background: rgba(255,255,255,.4);
+  color: rgba(61,61,74,.55);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all .25s ease;
+  font-family: inherit;
+}
+.filter-tag-list .tag-chip:hover {
+  border-color: rgba(176,124,216,.35);
+  background: rgba(176,124,216,.08);
+  color: #8b6ab0;
+}
+.filter-tag-list .tag-chip.active {
+  background: rgba(176,124,216,.15);
+  border-color: rgba(176,124,216,.45);
+  color: #6b4a90;
+  font-weight: 500;
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 768px) {
   .hero-carousel { height: 280px; }

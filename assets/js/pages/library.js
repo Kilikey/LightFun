@@ -23,8 +23,10 @@ let curSlide = 0, slideTimer;
   renderUpdates();
   renderRank();
   renderNewBooks();
+  renderFilterTags();
   renderNovelGrid(NOVELS);
   renderTags();
+  bindFilterEvents();
 
   const els = document.querySelectorAll('.a-l,.a-r,.a-b,.a-zb');
   if(els.length) {
@@ -548,3 +550,119 @@ document.getElementById('modal').addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
   if(e.key === 'Escape') closeModal();
 });
+
+/* ---------- 筛选器 ---------- */
+let activeFilters = { status: 'all', score: 'all', sort: 'default', tags: new Set() };
+
+function renderFilterTags() {
+  const tagCounts = {};
+  NOVELS.forEach(n => {
+    n.tags.forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
+  });
+  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 20);
+  const el = document.getElementById('filterTagList');
+  if (!el) return;
+  el.innerHTML = sortedTags.map(([tag, count]) =>
+    `<button class="tag-chip" data-tag="${tag.replace(/'/g, "\\'")}">${tag} <small style="opacity:.5">${count}</small></button>`
+  ).join('');
+}
+
+function bindFilterEvents() {
+  document.querySelectorAll('.filter-options[data-filter]').forEach(group => {
+    const type = group.dataset.filter;
+    group.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilters[type] = btn.dataset.value;
+        applyFilters();
+      });
+    });
+  });
+
+  const tagList = document.getElementById('filterTagList');
+  if (tagList) {
+    tagList.addEventListener('click', (e) => {
+      const chip = e.target.closest('.tag-chip');
+      if (!chip) return;
+      const tag = chip.dataset.tag;
+      if (activeFilters.tags.has(tag)) {
+        activeFilters.tags.delete(tag);
+        chip.classList.remove('active');
+      } else {
+        activeFilters.tags.add(tag);
+        chip.classList.add('active');
+      }
+      applyFilters();
+    });
+  }
+}
+
+function applyFilters() {
+  let results = [...NOVELS];
+
+  // 状态筛选
+  if (activeFilters.status !== 'all') {
+    results = results.filter(n => n.status === activeFilters.status);
+  }
+
+  // 评分筛选
+  if (activeFilters.score !== 'all') {
+    const minScore = parseFloat(activeFilters.score);
+    results = results.filter(n => n.score >= minScore);
+  }
+
+  // 标签筛选
+  if (activeFilters.tags.size > 0) {
+    results = results.filter(n => {
+      return Array.from(activeFilters.tags).every(tag => n.tags.includes(tag));
+    });
+  }
+
+  // 排序
+  if (activeFilters.sort === 'score') {
+    results.sort((a, b) => b.score - a.score);
+  } else if (activeFilters.sort === 'chapters') {
+    results.sort((a, b) => b.chapters - a.chapters);
+  } else if (activeFilters.sort === 'update') {
+    const updateWeight = {
+      '2小时前': 100, '5小时前': 95, '昨天': 90, '1天前': 85, '2天前': 80,
+      '3天前': 75, '4天前': 70, '5天前': 65, '6天前': 60, '1周前': 50,
+      '完结': 10, '长期休刊': 5
+    };
+    results.sort((a, b) => (updateWeight[b.update] || 0) - (updateWeight[a.update] || 0));
+  }
+
+  renderNovelGrid(results);
+  document.getElementById('novelCount').textContent = '共 ' + results.length + ' 部';
+}
+
+/* ---------- 覆盖原有的 filterNovels，使其与筛选器共存 ---------- */
+const _origFilterNovels = filterNovels;
+filterNovels = function() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!q) {
+    applyFilters();
+    document.getElementById('searchClear').style.display = 'none';
+    return;
+  }
+  document.getElementById('searchClear').style.display = 'flex';
+  let results = searchNovels(q);
+
+  // 搜索时也要应用筛选器
+  if (activeFilters.status !== 'all') {
+    results = results.filter(n => n.status === activeFilters.status);
+  }
+  if (activeFilters.score !== 'all') {
+    const minScore = parseFloat(activeFilters.score);
+    results = results.filter(n => n.score >= minScore);
+  }
+  if (activeFilters.tags.size > 0) {
+    results = results.filter(n => {
+      return Array.from(activeFilters.tags).every(tag => n.tags.includes(tag));
+    });
+  }
+
+  renderNovelGrid(results, q);
+  saveSearchHistory(q);
+};
