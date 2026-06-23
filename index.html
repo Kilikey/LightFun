@@ -145,6 +145,19 @@
       box-shadow: 0 4px 12px rgba(176, 124, 216, 0.15);
     }
 
+    .form-footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .form-footer a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .form-footer a:hover { text-decoration: underline; }
+
     /* Toast */
     #login-toast {
       position: fixed;
@@ -226,6 +239,9 @@
         <input type="password" placeholder="密码" id="passwordInput" value="">
       </div>
       <button class="login-btn" id="loginButton">✨ 登 录</button>
+      <div class="form-footer">
+        还没有账号？<a href="register.html">去注册 →</a>
+      </div>
     </div>
   </div>
 
