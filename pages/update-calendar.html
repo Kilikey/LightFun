@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📅 更新日历 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<style>
+/* ===== 更新日历页专属样式 ===== */
+.calendar-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.calendar-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+.calendar-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* 7天网格 */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 1024px) {
+  .calendar-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 日期卡片 */
+.day-card {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 1.2rem;
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+.day-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.day-card.today {
+  border: 2px solid var(--primary);
+  background: rgba(255,255,255,0.75);
+}
+
+.day-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.day-title .day-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+.day-title .day-badge.rest {
+  background: #a0a0b0;
+}
+
+/* 更新列表 */
+.day-updates {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.update-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+.update-item:hover {
+  background: rgba(255,255,255,0.9);
+}
+
+.update-item img {
+  width: 48px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.update-info {
+  flex: 1;
+  min-width: 0;
+}
+.update-info .title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.15rem;
+}
+.update-info .chapter {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+.update-info .time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.empty-day {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* 今日统计条 */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.stat-item {
+  text-align: center;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255,255,255,0.5);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+}
+.stat-item .num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.stat-item .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="deco">📅</div>
+<div class="deco">🌸</div>
+<div class="deco">✨</div>
+<div class="deco">📖</div>
+
+<div class="content">
+
+<!-- ===== 导航栏 ===== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="./library.html" class="nav-logo">✦ 次元书屋</a>
+    <div class="nav-links">
+      <a href="./library.html">文库</a>
+      <a href="./ranking.html">排行</a>
+      <a href="./update-calendar.html" class="active">更新</a>
+      <a href="./bookshelf.html">书架</a>
+      <a href="./user.html">我的</a>
+    </div>
+    <div class="nav-search">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 搜索轻小说..." onkeydown="handleNavSearch(event)">
+      </div>
+    </div>
+    <div class="nav-user">
+      <span class="avatar">三</span>
+      <span>张三</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 日历主体 ===== -->
+<div class="calendar-wrap">
+  <div class="calendar-header a-t">
+    <h1>📅 本周更新日历</h1>
+    <p>追踪你喜爱的轻小说最新更新</p>
+  </div>
+
+  <div class="stats-bar a-b" id="statsBar">
+    <div class="stat-item">
+      <div class="num" id="statTotal">0</div>
+      <div class="label">本周更新</div>
+    </div>
+    <div class="stat-item">
+      <div class="num" id="statOngoing">0</div>
+      <div class="label">连载中</div>
+    </div>
+    <div class="stat-item">
+      <div class="num" id="statToday">0</div>
+      <div class="label">今日更新</div>
+    </div>
+  </div>
+
+  <div class="calendar-grid" id="calendarGrid"></div>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="./library.html">返回文库</a>
+    <a href="../index.html">退出登录</a>
+  </div>
+  <p>🌸 次元书屋 · 为每一位轻小说爱好者打造</p>
+</footer>
+
+</div>
+
+<div id="toast"></div>
+
+<!-- ===== 脚本 ===== -->
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/core/state.js"></script>
+<script src="../assets/js/components/user-init.js"></script>
+<script src="../assets/js/data/novels.js"></script>
+<script src="../assets/js/pages/update-calendar.js"></script>
+
+</body>
+</html>
