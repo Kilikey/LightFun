@@ -350,3 +350,39 @@ D:\PythonFile\HTML\test for first html\
 | `readerSettings` | 阅读器偏好设置 | Object `{ fontSize, lineHeight, theme, fontFamily, scrollMode }` |
 | `searchHistory` | 搜索历史 | Array `['关键词1', '关键词2']` |
 | `app_state` | 全局应用状态 | Object（State.data 序列化） |
+| `db_comments` | 作品评论 | Object `{ novelId: [{ id, user, avatar, content, time, likes }] }` |
+| `db_chapter_comments` | 章节评论（本章说） | Object `{ "novelId-chapter": [{ id, user, avatar, content, time, likes }] }` |
+| `db_booklists` | 书单数据 | Array `[{ id, title, desc, novels, type, author }]` |
+
+---
+
+## 十一、评论系统 + 书单/专题（v1.5 社区功能完成，2026-06-23）
+
+### 评论系统
+
+**公共组件**：`assets/js/components/comments.js`
+
+| 功能 | 说明 | 位置 |
+|------|------|------|
+| 作品评论 | 在 library.html 模态框底部展示，可发表评论、点赞 | `Comments.renderSection('novel', novelId)` |
+| 章节评论（本章说） | 在 reader.html 底部展示，按章节隔离 | `Comments.renderSection('chapter', novelId, chapter)` |
+| 数据存储 | `db_comments` / `db_chapter_comments` (LocalStorage) | — |
+| 用户关联 | 自动读取 `State.get('user')` 作为评论作者 | — |
+| 字数限制 | 评论最多500字 | — |
+
+### 书单/专题
+
+**页面**：`pages/booklists.html` + `booklists.js`
+
+| 功能 | 说明 |
+|------|------|
+| 官方书单 | 6个预设书单：异世界转生必看、校园恋爱经典、科幻神作、战斗热血、黑暗悬疑、治愈日常 |
+| 用户创建 | 输入名称/描述，多选作品（网格选择），创建自定义书单 |
+| 书单详情 | 展示包含作品的封面网格，点击跳转阅读器 |
+| 删除书单 | 仅用户自建书单可删除 |
+| 数据存储 | `db_booklists` (LocalStorage) |
+
+### 导航栏统一（v1.5 最终）
+
+所有7个页面导航栏完全一致：
+`文库` → `排行` → `更新` → `书单` → `书架` → `我的`

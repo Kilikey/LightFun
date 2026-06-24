@@ -5,6 +5,8 @@
 > 位置：`D:\PythonFile\HTML\test for first html\memory.md`  
 > 最后更新：2026-06-23
 
+> **v1.5 社区功能已完成：评论系统 + 书单/专题 + 更新日历 + 排行榜**
+
 ---
 
 ## 📋 工作原则（必须遵守）
@@ -51,6 +53,7 @@
 | **个人中心** | `pages/user.html` | 阅读历史、评分、统计、编辑头像昵称 |
 | **排行榜** | `pages/ranking.html` | 5大榜单 + 历年「这本轻小说真厉害」 |
 | **更新日历** | `pages/update-calendar.html` | 一周七天日历，展示连载更新分配 |
+| **书单/专题** | `pages/booklists.html` | 官方书单 + 用户自建书单 |
 | **公共数据** | `assets/js/data/novels.js` | 100部轻小说数据（所有页面共享） |
 | **数据文件** | `assets/data/novels.json` | JSON 格式数据，100部轻小说 |
 | **基础样式** | `assets/css/base.css` | CSS变量、重置、浮动装饰、入场动画 |
@@ -61,6 +64,7 @@
 | **用户样式** | `assets/css/pages/user.css` | 用户卡片、统计、历史、评分 |
 | **全局状态** | `assets/js/core/state.js` | LocalStorage状态管理，支持订阅/发布 |
 | **用户组件** | `assets/js/components/user-init.js` | 全局用户头像/昵称渲染 + 编辑模态框 |
+| **评论组件** | `assets/js/components/comments.js` | 作品评论 + 章节评论（本章说） |
 | **数据请求** | `assets/js/core/api.js` | 数据层（当前fetch JSON） |
 | **工具函数** | `assets/js/utils/` | storage、formatter、dom、validator |
 | **组件** | `assets/js/components/` | toast、modal等 |
@@ -70,6 +74,7 @@
 | **用户逻辑** | `assets/js/pages/user.js` | 统计、历史、评分、偏好 |
 | **排行榜逻辑** | `assets/js/pages/ranking.js` | 5大榜单、历年榜单、用户评分覆盖 |
 | **更新日历逻辑** | `assets/js/pages/update-calendar.js` | 日历渲染、更新分配、统计条 |
+| **书单逻辑** | `assets/js/pages/booklists.js` | 官方书单、用户创建、书单详情 |
 | **GitHub学习** | `D:\Backup\Documents\Obsidian Vault\github学习.md` | 推送经验、命令速查 |
 
 ---
@@ -85,6 +90,8 @@
 - [x] 个人中心（user.html）— 阅读统计、阅读历史、评分记录、阅读偏好、**编辑头像昵称（30个预设emoji+图片上传）**
 - [x] 排行榜（ranking.html）— 5大榜单 + 历年「这本轻小说真厉害」2015-2026，用户评分覆盖静态分数
 - [x] 更新日历（update-calendar.html）— 一周七天日历，连载中轻小说按哈希分配更新时间
+- [x] **评论系统** — 作品评论（library模态框）+ 章节评论/本章说（reader底部），可发表、点赞
+- [x] **书单/专题** — `booklists.html`：6个官方预设书单 + 用户自建书单，多选作品、详情展示
 - [x] 评分系统 — 模态框中5星评分，LocalStorage 存储，影响排行榜显示分数
 - [x] **100部轻小说数据** — novels.json + novels.js 公共数据文件，所有页面共享
 - [x] 模块化文件架构（base.css + layout.css + 页面级 CSS/JS 拆分）
@@ -94,7 +101,7 @@
 - [x] 33+ 细节优化：跨页搜索、字体选择、夜间模式、自动标记已读、阅读时间估算、排名「我的评分」标签、读完提示、favicon、自定义滚动条、页面入场动画、登录注册联动等
 
 ### 待办（按 Plan.md 路线图）
-- [ ] **v1.5 社区**：评论、书单/专题
+- [x] **v1.5 社区**：评论✅、书单/专题✅、排行榜✅、更新日历✅
 - [ ] **v2.0 运营**：后台管理、推荐位管理、数据统计
 - [ ] **v3.0 高级**：暗黑模式、PWA、离线阅读、付费系统
 
@@ -115,21 +122,23 @@
 
 ## 📝 上次对话工作内容（2026-06-23）
 
-1. **数据扩展至100部** — novels.json 新增50部经典轻小说（id 51-100），涵盖约会大作战、Overlord、Fate系列、科学超电磁炮、龙与虎、空之境界、全职高手等
-2. **创建更新日历页面** — `pages/update-calendar.html` + `update-calendar.js`：一周七天日历视图，展示连载中轻小说的模拟更新时间分配，今日高亮，统计条
-3. **数据重构** — 提取 `assets/js/data/novels.js` 公共数据文件，所有页面（library/ranking/bookshelf/user）统一引用，移除硬编码数组
-4. **导航栏统一** — 所有页面添加「更新」入口，5个页面导航完全一致
-5. **文库筛选器** — 状态（全部/连载中/已完结）、评分（全部/9.0+/8.0+/7.0+）、排序（默认/评分/更新/章节数）、标签（Top20多选交集），与搜索关键词叠加过滤
+1. **数据扩展至100部** — novels.json 新增50部经典轻小说（id 51-100）
+2. **创建更新日历页面** — `pages/update-calendar.html` + `update-calendar.js`
+3. **数据重构** — 提取 `assets/js/data/novels.js` 公共数据文件，所有页面统一引用
+4. **导航栏统一** — 所有页面添加「更新」入口
+5. **文库筛选器** — 状态/评分/排序/标签四维筛选
+6. **评论系统** — `assets/js/components/comments.js`：作品评论（library模态框）+ 章节评论/本章说（reader底部），支持发表、点赞
+7. **书单/专题** — `pages/booklists.html` + `booklists.js`：6个官方预设书单（异世界/校园/科幻/战斗/黑暗/治愈），用户可创建自定义书单，多选作品，支持删除
+8. **导航栏再次统一** — 所有页面添加「书单」入口，7个页面导航完全一致
 
 ---
 
 ## 🚀 下次对话建议开启方向
 
-1. **评论系统** — 作品评论、章节评论（本章说）
-2. **书单/专题** — 用户自建书单、官方专题推荐
-3. **响应式优化** — 移动端适配、页面加载性能
-4. **暗黑模式** — 全局主题切换，PWA 支持
-5. **其他** — 用户指定
+1. **v2.0 运营** — 后台管理面板、数据可视化
+2. **响应式优化** — 移动端适配、页面加载性能
+3. **暗黑模式** — 全局主题切换，PWA 支持
+4. **其他** — 用户指定
 
 ---
 
