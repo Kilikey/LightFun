@@ -472,6 +472,7 @@ function openModal(id) {
         <button class="read-btn" onclick="startReading(${n.id})">${totalRead > 0 ? '▶ 继续阅读' : '开始阅读'}</button>
         <button class="read-btn" style="margin-left:0.5rem;background:linear-gradient(135deg,#f5b342,#f5a0b8);" onclick="addToBookshelf(${n.id})">${isOnShelf ? '✅ 已在书架' : '❤️ 加入书架'}</button>
       </div>
+      ${Comments.renderSection('novel', n.id)}
     </div>`;
   document.getElementById('modal').classList.add('show');
   document.body.style.overflow = 'hidden';

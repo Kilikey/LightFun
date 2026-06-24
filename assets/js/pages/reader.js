@@ -397,6 +397,13 @@ function loadChapter(ch) {
   // 保存进度
   saveProgress(currentNovel.id, ch);
   saveHistory(currentNovel.id, ch);
+
+  // 渲染章节评论
+  const commentsEl = document.getElementById('chapterComments');
+  if (commentsEl && currentNovel) {
+    commentsEl.innerHTML = Comments.renderSection('chapter', currentNovel.id, ch);
+  }
+
   // 重置本章已读标记（用于滚动自动标记）
   chapterReadMarked = false;
 

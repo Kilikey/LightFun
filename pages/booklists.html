@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 书单 · 次元书屋</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<style>
+/* ===== 书单页专属样式 ===== */
+.booklists-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.booklists-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.booklists-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+.booklists-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* 创建按钮 */
+.create-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 100px;
+  border: none;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary-light));
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+.create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(176, 124, 216, 0.25);
+}
+
+/* 书单网格 */
+.booklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* 书单卡片 */
+.booklist-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.booklist-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.booklist-card .cover-strip {
+  display: flex;
+  gap: 0.3rem;
+  padding: 1rem 1rem 0.5rem;
+  overflow: hidden;
+}
+.booklist-card .cover-strip img {
+  width: 60px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+.booklist-card .bl-info {
+  padding: 0.8rem 1rem 1.2rem;
+}
+.booklist-card .bl-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+.booklist-card .bl-desc {
+  font-size: 0.8rem;
+  color: rgba(61, 61, 74, 0.5);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.booklist-card .bl-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.booklist-card .bl-tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  background: rgba(176, 124, 216, 0.1);
+  color: #8b6ab0;
+}
+
+/* 模态框书单详情 */
+.bl-detail-novels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.bl-detail-novels .novel-item {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.bl-detail-novels .novel-item:hover {
+  transform: translateY(-3px);
+}
+.bl-detail-novels .novel-item img {
+  width: 100%;
+  height: 140px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 0.4rem;
+}
+.bl-detail-novels .novel-item .title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 创建书单表单 */
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.create-form label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+.create-form input,
+.create-form textarea {
+  padding: 0.6rem 1rem;
+  border: 1.5px solid rgba(176, 124, 216, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.create-form input:focus,
+.create-form textarea:focus {
+  border-color: rgba(176, 124, 216, 0.4);
+}
+.create-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* 小说选择列表 */
+.novel-select-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.6rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(176, 124, 216, 0.1);
+}
+.novel-select-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+.novel-select-item:hover {
+  background: rgba(176, 124, 216, 0.06);
+}
+.novel-select-item.selected {
+  border-color: var(--color-primary);
+  background: rgba(176, 124, 216, 0.1);
+}
+.novel-select-item img {
+  width: 60px;
+  height: 80px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.novel-select-item .title {
+  font-size: 0.7rem;
+  color: var(--text-main);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+</style>
+</head>
+<body>
+
+<div class="deco">📚</div>
+<div class="deco">🌸</div>
+<div class="deco">✨</div>
+<div class="deco">📖</div>
+
+<div class="content">
+
+<!-- ===== 导航栏 ===== -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="./library.html" class="nav-logo">✦ 次元书屋</a>
+    <div class="nav-links">
+      <a href="./library.html">文库</a>
+      <a href="./ranking.html">排行</a>
+      <a href="./update-calendar.html">更新</a>
+      <a href="./booklists.html" class="active">书单</a>
+      <a href="./bookshelf.html">书架</a>
+      <a href="./user.html">我的</a>
+    </div>
+    <div class="nav-search">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="🔍 搜索轻小说..." onkeydown="handleNavSearch(event)">
+      </div>
+    </div>
+    <div class="nav-user">
+      <span class="avatar">三</span>
+      <span>张三</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== 书单主体 ===== -->
+<div class="booklists-wrap">
+  <div class="booklists-header a-t">
+    <h1>📚 精选书单</h1>
+    <p>发现更多好书，创建属于你的书单</p>
+  </div>
+
+  <div style="text-align:center;" class="a-b">
+    <button class="create-btn" onclick="openCreateModal()">➕ 创建书单</button>
+  </div>
+
+  <!-- 官方书单 -->
+  <section class="section">
+    <div class="section-header">
+      <h2>🏅 官方推荐</h2>
+    </div>
+    <div class="booklist-grid" id="officialLists"></div>
+  </section>
+
+  <!-- 我的书单 -->
+  <section class="section">
+    <div class="section-header">
+      <h2>💼 我的书单</h2>
+    </div>
+    <div class="booklist-grid" id="userLists"></div>
+    <div id="emptyUserLists" style="text-align:center;padding:2rem;color:var(--text-muted);display:none;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">📭</div>
+      <div>还没有创建书单，点击上方按钮创建第一个吧！</div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="./library.html">返回文库</a>
+    <a href="../index.html">退出登录</a>
+  </div>
+  <p>🌸 次元书屋 · 为每一位轻小说爱好者打造</p>
+</footer>
+
+</div>
+
+<!-- 模态框 -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box" style="max-width:700px;">
+    <button class="close-btn" onclick="closeModal()">✕</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ===== 脚本 ===== -->
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/formatter.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/core/state.js"></script>
+<script src="../assets/js/components/user-init.js"></script>
+<script src="../assets/js/data/novels.js"></script>
+<script src="../assets/js/pages/booklists.js"></script>
+
+</body>
+</html>
